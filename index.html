@@ -3,278 +3,364 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Akifio - Dijital Araçlar</title>
 
-    <style>
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            margin: 0;
-            font-family: Arial, Helvetica, sans-serif;
-            background: #f7f8fc;
-            color: #111827;
-        }
-
-        header {
-            background: #fff;
-            border-bottom: 1px solid #e5e7eb;
-        }
-
-        .header {
-            max-width: 1100px;
-            margin: auto;
-            padding: 20px;
-        }
-
-        .logo {
-            color: #111827;
-            text-decoration: none;
-            font-size: 26px;
-            font-weight: 800;
-        }
-
-        .logo span {
-            color: #5b5cf0;
-        }
-
-        .hero {
-            max-width: 1000px;
-            margin: 80px auto 70px;
-            padding: 0 20px;
-            text-align: center;
-        }
-
-        .hero h1 {
-            margin: 0;
-            font-size: 56px;
-            line-height: 1.1;
-            letter-spacing: -2px;
-        }
-
-        .hero h1 span {
-            color: #5b5cf0;
-        }
-
-        .hero p {
-            max-width: 650px;
-            margin: 20px auto 0;
-            color: #6b7280;
-            font-size: 20px;
-            line-height: 1.5;
-        }
-
-        .container {
-            max-width: 1100px;
-            margin: auto;
-            padding: 0 20px 80px;
-        }
-
-        .section {
-            margin-bottom: 60px;
-        }
-
-        .section h2 {
-            margin-bottom: 20px;
-            font-size: 26px;
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-        }
-
-        .card {
-            display: block;
-            padding: 28px;
-            background: #fff;
-            border: 1px solid #e5e7eb;
-            border-radius: 18px;
-            text-decoration: none;
-            color: #111827;
-            transition: 0.2s;
-        }
-
-        .card:hover {
-            transform: translateY(-3px);
-            border-color: #5b5cf0;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.06);
-        }
-
-        .icon {
-            width: 48px;
-            height: 48px;
-            margin-bottom: 18px;
-            border-radius: 12px;
-            background: #eef0ff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-        }
-
-        .card h3 {
-            margin: 0 0 8px;
-            font-size: 20px;
-        }
-
-        .card p {
-            margin: 0;
-            color: #6b7280;
-            line-height: 1.5;
-        }
-
-        .disabled {
-            opacity: 0.6;
-            cursor: default;
-        }
-
-        .disabled:hover {
-            transform: none;
-            border-color: #e5e7eb;
-            box-shadow: none;
-        }
-
-        footer {
-            padding: 30px 20px;
-            border-top: 1px solid #e5e7eb;
-            background: #fff;
-            text-align: center;
-            color: #6b7280;
-        }
-
-        @media (max-width: 700px) {
-            .hero {
-                margin-top: 55px;
-            }
-
-            .hero h1 {
-                font-size: 40px;
-            }
-
-            .hero p {
-                font-size: 17px;
-            }
-
-            .grid {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
 
-<header>
-    <div class="header">
+    <!-- SOL MENÜ -->
+
+    <aside class="sidebar">
+
         <a href="index.html" class="logo">
             Akif<span>io</span>
         </a>
+
+        <div class="menu-title">ANA MENÜ</div>
+
+        <a href="index.html" class="menu-link active">
+            <span class="menu-icon">⌂</span>
+            Ana Sayfa
+        </a>
+
+
+        <div class="menu-title">QR ARAÇLARI</div>
+
+        <a href="tools/qr.html" class="menu-link">
+            <span class="menu-icon">▣</span>
+            QR Kod Oluştur
+        </a>
+
+        <a href="tools/qr_reader.html" class="menu-link">
+            <span class="menu-icon">⌕</span>
+            QR Kod Oku
+        </a>
+
+
+        <div class="menu-title">GÖRSEL ARAÇLARI</div>
+
+        <a href="#" class="menu-link">
+            <span class="menu-icon">▧</span>
+            Görsel Araçları
+        </a>
+
+        <a href="#" class="menu-link">
+            <span class="menu-icon">◈</span>
+            Görsel Dönüştür
+        </a>
+
+
+        <div class="menu-title">PDF ARAÇLARI</div>
+
+        <a href="#" class="menu-link">
+            <span class="menu-icon">▤</span>
+            PDF Araçları
+        </a>
+
+
+        <div class="menu-title">DÖNÜŞTÜRÜCÜLER</div>
+
+        <a href="#" class="menu-link">
+            <span class="menu-icon">⇄</span>
+            Dosya Dönüştür
+        </a>
+
+        <a href="#" class="menu-link">
+            <span class="menu-icon">⇆</span>
+            Birim Dönüştür
+        </a>
+
+    </aside>
+
+
+    <!-- ANA ALAN -->
+
+    <div class="main">
+
+        <!-- ÜST BAR -->
+
+        <header class="topbar">
+
+            <input
+                type="search"
+                class="search"
+                placeholder="Araç ara..."
+            >
+
+        </header>
+
+
+        <!-- İÇERİK -->
+
+        <main class="content">
+
+            <section class="hero">
+
+                <h1>
+                    Dijital işlerini
+                    <span>kolaylaştır.</span>
+                </h1>
+
+                <p>
+                    İhtiyacın olan tüm dijital araçlar
+                    tek bir yerde. Hızlı, basit ve ücretsiz.
+                </p>
+
+            </section>
+
+
+            <!-- QR ARAÇLARI -->
+
+            <section class="category category-qr">
+
+                <div class="category-header">
+
+                    <h2 class="category-title">
+                        <span class="category-dot"></span>
+                        QR Araçları
+                    </h2>
+
+                </div>
+
+
+                <div class="tools-grid">
+
+
+                    <a href="tools/qr.html" class="tool-card">
+
+                        <div class="tool-icon">
+                            ▣
+                        </div>
+
+                        <h3>
+                            QR Kod Oluştur
+                        </h3>
+
+                        <p>
+                            Metin veya bağlantından
+                            kolayca QR kod oluştur.
+                        </p>
+
+                    </a>
+
+
+                    <a href="tools/qr_reader.html" class="tool-card">
+
+                        <div class="tool-icon">
+                            ⌕
+                        </div>
+
+                        <h3>
+                            QR Kod Oku
+                        </h3>
+
+                        <p>
+                            QR kodlarını hızlı ve kolay
+                            şekilde oku.
+                        </p>
+
+                    </a>
+
+                </div>
+
+            </section>
+
+
+            <!-- GÖRSEL ARAÇLARI -->
+
+            <section class="category category-image">
+
+                <div class="category-header">
+
+                    <h2 class="category-title">
+                        <span class="category-dot"></span>
+                        Görsel Araçları
+                    </h2>
+
+                </div>
+
+
+                <div class="tools-grid">
+
+
+                    <a href="#" class="tool-card">
+
+                        <div class="tool-icon">
+                            ▧
+                        </div>
+
+                        <h3>
+                            Görsel Sıkıştır
+                        </h3>
+
+                        <p>
+                            Görsellerin boyutunu kolayca küçült.
+                        </p>
+
+                    </a>
+
+
+                    <a href="#" class="tool-card">
+
+                        <div class="tool-icon">
+                            ◈
+                        </div>
+
+                        <h3>
+                            JPG → PNG
+                        </h3>
+
+                        <p>
+                            JPG görsellerini PNG formatına dönüştür.
+                        </p>
+
+                    </a>
+
+
+                    <a href="#" class="tool-card">
+
+                        <div class="tool-icon">
+                            ◇
+                        </div>
+
+                        <h3>
+                            PNG → JPG
+                        </h3>
+
+                        <p>
+                            PNG görsellerini JPG formatına dönüştür.
+                        </p>
+
+                    </a>
+
+                </div>
+
+            </section>
+
+
+            <!-- PDF ARAÇLARI -->
+
+            <section class="category category-pdf">
+
+                <div class="category-header">
+
+                    <h2 class="category-title">
+                        <span class="category-dot"></span>
+                        PDF Araçları
+                    </h2>
+
+                </div>
+
+
+                <div class="tools-grid">
+
+
+                    <a href="#" class="tool-card">
+
+                        <div class="tool-icon">
+                            ▤
+                        </div>
+
+                        <h3>
+                            PDF Birleştir
+                        </h3>
+
+                        <p>
+                            Birden fazla PDF dosyasını tek dosyada birleştir.
+                        </p>
+
+                    </a>
+
+
+                    <a href="#" class="tool-card">
+
+                        <div class="tool-icon">
+                            ▤
+                        </div>
+
+                        <h3>
+                            PDF → JPG
+                        </h3>
+
+                        <p>
+                            PDF sayfalarını JPG görsellerine dönüştür.
+                        </p>
+
+                    </a>
+
+                </div>
+
+            </section>
+
+
+            <!-- DÖNÜŞTÜRÜCÜLER -->
+
+            <section class="category category-convert">
+
+                <div class="category-header">
+
+                    <h2 class="category-title">
+                        <span class="category-dot"></span>
+                        Dönüştürücüler
+                    </h2>
+
+                </div>
+
+
+                <div class="tools-grid">
+
+
+                    <a href="#" class="tool-card">
+
+                        <div class="tool-icon">
+                            ⇄
+                        </div>
+
+                        <h3>
+                            Dosya Dönüştür
+                        </h3>
+
+                        <p>
+                            Dosyalarını farklı formatlara dönüştür.
+                        </p>
+
+                    </a>
+
+
+                    <a href="#" class="tool-card">
+
+                        <div class="tool-icon">
+                            ⇆
+                        </div>
+
+                        <h3>
+                            Birim Dönüştür
+                        </h3>
+
+                        <p>
+                            Uzunluk, ağırlık ve diğer birimleri dönüştür.
+                        </p>
+
+                    </a>
+
+                </div>
+
+            </section>
+
+        </main>
+
+
+        <footer class="footer">
+            © 2026 Akifio
+        </footer>
+
     </div>
-</header>
-
-<section class="hero">
-    <h1>
-        Dijital işlerini <span>kolaylaştır.</span>
-    </h1>
-
-    <p>
-        İhtiyacın olan dijital araçlar tek bir yerde.
-        Hızlı, basit ve ücretsiz.
-    </p>
-</section>
-
-<main class="container">
-
-    <section class="section">
-
-        <h2>QR Araçları</h2>
-
-        <div class="grid">
-
-            <!-- QR OLUŞTUR -->
-            <a href="tools/qr.html" class="card">
-
-                <div class="icon">▣</div>
-
-                <h3>QR Kod Oluştur</h3>
-
-                <p>
-                    Metin veya bağlantından kolayca QR kod oluştur.
-                </p>
-
-            </a>
-
-            <!-- QR OKU -->
-            <a href="tools/qr_reader.html" class="card">
-
-                <div class="icon">⌕</div>
-
-                <h3>QR Kod Oku</h3>
-
-                <p>
-                    QR kod görselini yükle ve içeriğini kolayca oku.
-                </p>
-
-            </a>
-
-        </div>
-
-    </section>
 
 
-    <section class="section">
-
-        <h2>Görsel Araçları</h2>
-
-        <div class="grid">
-
-            <div class="card disabled">
-                <div class="icon">◇</div>
-                <h3>Görsel Araçları</h3>
-                <p>Yakında görseller için kullanışlı araçlar.</p>
-            </div>
-
-            <div class="card disabled">
-                <div class="icon">▧</div>
-                <h3>Görsel Dönüştür</h3>
-                <p>Farklı görsel formatları arasında dönüşüm yap.</p>
-            </div>
-
-        </div>
-
-    </section>
-
-
-    <section class="section">
-
-        <h2>Dönüştürücüler</h2>
-
-        <div class="grid">
-
-            <div class="card disabled">
-                <div class="icon">⇄</div>
-                <h3>Dosya Dönüştürücü</h3>
-                <p>Dosyalarını farklı formatlara dönüştür.</p>
-            </div>
-
-            <div class="card disabled">
-                <div class="icon">◫</div>
-                <h3>PDF Araçları</h3>
-                <p>PDF dosyaları için kullanışlı araçlar.</p>
-            </div>
-
-        </div>
-
-    </section>
-
-</main>
-
-<footer>
-    © 2026 Akifio
-</footer>
+    <script src="js/main.js"></script>
 
 </body>
 </html>
