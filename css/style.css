@@ -1,1 +1,349 @@
+/* =========================
+   AKIFIO ANA TASARIM
+   ========================= */
 
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f7f8fc;
+    color: #111827;
+}
+
+/* =========================
+   SOL MENÜ
+   ========================= */
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 250px;
+    height: 100vh;
+    padding: 24px 16px;
+    background: #ffffff;
+    border-right: 1px solid #e5e7eb;
+    overflow-y: auto;
+}
+
+.logo {
+    display: block;
+    padding: 0 12px 28px;
+    font-size: 27px;
+    font-weight: 800;
+    text-decoration: none;
+    color: #111827;
+}
+
+.logo span {
+    color: #5b5cf0;
+}
+
+/* Menü başlıkları */
+
+.menu-title {
+    margin: 24px 12px 8px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: #9ca3af;
+}
+
+/* Menü bağlantıları */
+
+.menu-link {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    width: 100%;
+    padding: 11px 12px;
+    margin-bottom: 3px;
+    border-radius: 10px;
+    color: #4b5563;
+    text-decoration: none;
+    font-size: 14px;
+    transition: 0.2s;
+}
+
+.menu-link:hover {
+    background: #f3f4f6;
+    color: #111827;
+}
+
+.menu-link.active {
+    background: #eef0ff;
+    color: #5b5cf0;
+    font-weight: 600;
+}
+
+.menu-icon {
+    width: 22px;
+    text-align: center;
+    font-size: 17px;
+}
+
+/* =========================
+   ANA İÇERİK
+   ========================= */
+
+.main {
+    margin-left: 250px;
+    min-height: 100vh;
+}
+
+/* Üst bar */
+
+.topbar {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    height: 72px;
+    padding: 0 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(255, 255, 255, 0.94);
+    border-bottom: 1px solid #e5e7eb;
+    backdrop-filter: blur(10px);
+}
+
+/* Arama */
+
+.search {
+    width: 360px;
+    height: 42px;
+    padding: 0 16px;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    outline: none;
+    background: #f9fafb;
+    font-size: 14px;
+}
+
+.search:focus {
+    border-color: #5b5cf0;
+    background: #ffffff;
+}
+
+/* =========================
+   İÇERİK
+   ========================= */
+
+.content {
+    max-width: 1250px;
+    margin: 0 auto;
+    padding: 55px 40px 80px;
+}
+
+.hero {
+    margin-bottom: 55px;
+}
+
+.hero h1 {
+    margin: 0 0 12px;
+    font-size: 42px;
+    letter-spacing: -1.5px;
+}
+
+.hero h1 span {
+    color: #5b5cf0;
+}
+
+.hero p {
+    max-width: 650px;
+    margin: 0;
+    color: #6b7280;
+    font-size: 17px;
+    line-height: 1.6;
+}
+
+/* =========================
+   KATEGORİ
+   ========================= */
+
+.category {
+    margin-bottom: 50px;
+}
+
+.category-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+}
+
+.category-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+    font-size: 22px;
+}
+
+.category-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #5b5cf0;
+}
+
+/* =========================
+   ARAÇ KARTLARI
+   ========================= */
+
+.tools-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.tool-card {
+    display: block;
+    min-height: 170px;
+    padding: 24px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    color: #111827;
+    text-decoration: none;
+    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+}
+
+.tool-card:hover {
+    transform: translateY(-3px);
+    border-color: #d7d8ff;
+    box-shadow: 0 12px 30px rgba(17, 24, 39, 0.08);
+}
+
+.tool-icon {
+    width: 46px;
+    height: 46px;
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    background: #eef0ff;
+    color: #5b5cf0;
+    font-size: 21px;
+}
+
+.tool-card h3 {
+    margin: 0 0 7px;
+    font-size: 17px;
+}
+
+.tool-card p {
+    margin: 0;
+    color: #6b7280;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+/* =========================
+   KATEGORİ RENKLERİ
+   ========================= */
+
+.category-qr .category-dot {
+    background: #6366f1;
+}
+
+.category-qr .tool-icon {
+    background: #eef0ff;
+    color: #6366f1;
+}
+
+.category-image .category-dot {
+    background: #0ea5e9;
+}
+
+.category-image .tool-icon {
+    background: #eaf8ff;
+    color: #0ea5e9;
+}
+
+.category-pdf .category-dot {
+    background: #f97316;
+}
+
+.category-pdf .tool-icon {
+    background: #fff2e8;
+    color: #f97316;
+}
+
+.category-convert .category-dot {
+    background: #10b981;
+}
+
+.category-convert .tool-icon {
+    background: #eafaf4;
+    color: #10b981;
+}
+
+/* =========================
+   FOOTER
+   ========================= */
+
+.footer {
+    padding: 30px 40px;
+    border-top: 1px solid #e5e7eb;
+    color: #9ca3af;
+    font-size: 13px;
+}
+
+/* =========================
+   MOBİL
+   ========================= */
+
+@media (max-width: 1000px) {
+
+    .tools-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .search {
+        width: 280px;
+    }
+}
+
+@media (max-width: 700px) {
+
+    .sidebar {
+        position: static;
+        width: 100%;
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .main {
+        margin-left: 0;
+    }
+
+    .topbar {
+        padding: 0 20px;
+    }
+
+    .search {
+        width: 100%;
+    }
+
+    .content {
+        padding: 35px 20px 60px;
+    }
+
+    .hero h1 {
+        font-size: 34px;
+    }
+
+    .tools-grid {
+        grid-template-columns: 1fr;
+    }
+}
