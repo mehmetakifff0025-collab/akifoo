@@ -1,1 +1,429 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <title>Görsel Sıkıştır - Akifio</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f7f8fc;
+            color: #111827;
+        }
+
+        .container {
+            width: min(900px, calc(100% - 32px));
+            margin: 50px auto;
+        }
+
+        .back {
+            display: inline-block;
+            margin-bottom: 24px;
+            color: #5b5cf0;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .card {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 18px;
+            padding: 32px;
+            box-shadow: 0 10px 30px rgba(17, 24, 39, 0.06);
+        }
+
+        h1 {
+            margin: 0 0 10px;
+            font-size: 32px;
+        }
+
+        .description {
+            margin: 0 0 28px;
+            color: #6b7280;
+            line-height: 1.6;
+        }
+
+        .upload {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 180px;
+            padding: 25px;
+            border: 2px dashed #d1d5db;
+            border-radius: 14px;
+            cursor: pointer;
+            text-align: center;
+            transition: 0.2s;
+        }
+
+        .upload:hover {
+            border-color: #5b5cf0;
+            background: #f8f8ff;
+        }
+
+        .upload strong {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 17px;
+        }
+
+        .upload span {
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        .preview {
+            display: none;
+            margin-top: 25px;
+        }
+
+        .preview img {
+            display: block;
+            max-width: 100%;
+            max-height: 350px;
+            margin: 0 auto;
+            border-radius: 10px;
+        }
+
+        .controls {
+            display: none;
+            margin-top: 30px;
+        }
+
+        .control-row {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .control-row label {
+            min-width: 80px;
+            font-weight: 600;
+        }
+
+        input[type="range"] {
+            flex: 1;
+        }
+
+        #qualityValue {
+            width: 45px;
+            text-align: right;
+            font-weight: 600;
+        }
+
+        .button {
+            width: 100%;
+            padding: 14px 20px;
+            border: 0;
+            border-radius: 10px;
+            background: #5b5cf0;
+            color: white;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .button:hover {
+            background: #494ad8;
+        }
+
+        .button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .result {
+            display: none;
+            margin-top: 25px;
+            padding: 18px;
+            border-radius: 12px;
+            background: #f3f4f6;
+        }
+
+        .result p {
+            margin: 6px 0;
+            font-size: 14px;
+        }
+
+        .download {
+            display: block;
+            margin-top: 15px;
+            padding: 13px 20px;
+            border-radius: 10px;
+            background: #111827;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .error {
+            display: none;
+            margin-top: 20px;
+            padding: 12px 15px;
+            border-radius: 10px;
+            background: #fef2f2;
+            color: #b91c1c;
+            font-size: 14px;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                margin: 25px auto;
+            }
+
+            .card {
+                padding: 22px;
+            }
+
+            h1 {
+                font-size: 27px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <a href="../index.html" class="back">← Akifio ana sayfa</a>
+
+        <div class="card">
+
+            <h1>Görsel Sıkıştır</h1>
+
+            <p class="description">
+                Görselinin dosya boyutunu küçült.
+                İşlem tarayıcında gerçekleşir.
+            </p>
+
+            <label class="upload" for="fileInput">
+                <div>
+                    <strong>Görsel seç</strong>
+                    <span>JPG, PNG veya WebP dosyanı buraya yükle</span>
+                </div>
+            </label>
+
+            <input
+                id="fileInput"
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+            >
+
+            <div class="preview" id="preview">
+                <img id="previewImage" alt="Görsel önizleme">
+            </div>
+
+            <div class="controls" id="controls">
+
+                <div class="control-row">
+                    <label for="quality">Kalite</label>
+
+                    <input
+                        id="quality"
+                        type="range"
+                        min="10"
+                        max="100"
+                        value="80"
+                    >
+
+                    <span id="qualityValue">80%</span>
+                </div>
+
+                <button class="button" id="compressButton">
+                    Görseli Sıkıştır
+                </button>
+
+            </div>
+
+            <div class="result" id="result">
+
+                <p>
+                    <strong>Orijinal boyut:</strong>
+                    <span id="originalSize"></span>
+                </p>
+
+                <p>
+                    <strong>Yeni boyut:</strong>
+                    <span id="compressedSize"></span>
+                </p>
+
+                <a
+                    id="downloadButton"
+                    class="download"
+                    download="akifio-sikistirilmis.jpg"
+                >
+                    Sıkıştırılmış Görseli İndir
+                </a>
+
+            </div>
+
+            <div class="error" id="error"></div>
+
+        </div>
+
+    </div>
+
+    <script>
+        const fileInput = document.getElementById("fileInput");
+        const preview = document.getElementById("preview");
+        const previewImage = document.getElementById("previewImage");
+        const controls = document.getElementById("controls");
+        const quality = document.getElementById("quality");
+        const qualityValue = document.getElementById("qualityValue");
+        const compressButton = document.getElementById("compressButton");
+        const result = document.getElementById("result");
+        const originalSize = document.getElementById("originalSize");
+        const compressedSize = document.getElementById("compressedSize");
+        const downloadButton = document.getElementById("downloadButton");
+        const errorBox = document.getElementById("error");
+
+        let selectedFile = null;
+        let previewUrl = null;
+        let downloadUrl = null;
+
+        function showError(message) {
+            errorBox.textContent = message;
+            errorBox.style.display = "block";
+        }
+
+        function hideError() {
+            errorBox.style.display = "none";
+            errorBox.textContent = "";
+        }
+
+        function formatSize(bytes) {
+            if (bytes < 1024) {
+                return bytes + " B";
+            }
+
+            if (bytes < 1024 * 1024) {
+                return (bytes / 1024).toFixed(1) + " KB";
+            }
+
+            return (bytes / (1024 * 1024)).toFixed(2) + " MB";
+        }
+
+        fileInput.addEventListener("change", () => {
+            hideError();
+
+            const file = fileInput.files[0];
+
+            if (!file) {
+                return;
+            }
+
+            if (!file.type.startsWith("image/")) {
+                showError("Lütfen geçerli bir görsel dosyası seç.");
+                return;
+            }
+
+            selectedFile = file;
+
+            if (previewUrl) {
+                URL.revokeObjectURL(previewUrl);
+            }
+
+            previewUrl = URL.createObjectURL(file);
+
+            previewImage.src = previewUrl;
+
+            preview.style.display = "block";
+            controls.style.display = "block";
+            result.style.display = "none";
+        });
+
+        quality.addEventListener("input", () => {
+            qualityValue.textContent = quality.value + "%";
+        });
+
+        compressButton.addEventListener("click", () => {
+            hideError();
+
+            if (!selectedFile) {
+                showError("Önce bir görsel seç.");
+                return;
+            }
+
+            compressButton.disabled = true;
+            compressButton.textContent = "Sıkıştırılıyor...";
+
+            const image = new Image();
+
+            image.onload = () => {
+                const canvas = document.createElement("canvas");
+                const context = canvas.getContext("2d");
+
+                canvas.width = image.naturalWidth;
+                canvas.height = image.naturalHeight;
+
+                context.drawImage(
+                    image,
+                    0,
+                    0,
+                    canvas.width,
+                    canvas.height
+                );
+
+                const qualityValueNumber = Number(quality.value) / 100;
+
+                canvas.toBlob(
+                    (blob) => {
+
+                        compressButton.disabled = false;
+                        compressButton.textContent = "Görseli Sıkıştır";
+
+                        if (!blob) {
+                            showError("Görsel sıkıştırılamadı.");
+                            return;
+                        }
+
+                        if (downloadUrl) {
+                            URL.revokeObjectURL(downloadUrl);
+                        }
+
+                        downloadUrl = URL.createObjectURL(blob);
+
+                        originalSize.textContent = formatSize(
+                            selectedFile.size
+                        );
+
+                        compressedSize.textContent = formatSize(
+                            blob.size
+                        );
+
+                        downloadButton.href = downloadUrl;
+
+                        result.style.display = "block";
+
+                    },
+                    "image/jpeg",
+                    qualityValueNumber
+                );
+            };
+
+            image.onerror = () => {
+                compressButton.disabled = false;
+                compressButton.textContent = "Görseli Sıkıştır";
+                showError("Görsel okunamadı.");
+            };
+
+            image.src = URL.createObjectURL(selectedFile);
+        });
+    </script>
+
+</body>
+</html>
