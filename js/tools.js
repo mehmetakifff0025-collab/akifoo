@@ -50,7 +50,7 @@ const AKIFIO_TOOLS = [
         description: "JPG, PNG ve diğer görsel formatları arasında dönüştür.",
         category: "Görsel Araçları",
         icon: "◈",
-        url: "tools/image-convert.html",
+        url: ""tools/jpg-to-pdf.html",
         active: true
     },
 
