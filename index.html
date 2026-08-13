@@ -12,7 +12,6 @@
 <body>
 
     <!-- SOL MENÜ -->
-
     <aside class="sidebar">
 
         <a href="index.html" class="logo">
@@ -26,75 +25,30 @@
             Ana Sayfa
         </a>
 
-
-        <div class="menu-title">QR ARAÇLARI</div>
-
-        <a href="tools/qr.html" class="menu-link">
-            <span class="menu-icon">▣</span>
-            QR Kod Oluştur
-        </a>
-
-        <a href="tools/qr_reader.html" class="menu-link">
-            <span class="menu-icon">⌕</span>
-            QR Kod Oku
-        </a>
-
-
-        <div class="menu-title">GÖRSEL ARAÇLARI</div>
-
-        <a href="#" class="menu-link">
-            <span class="menu-icon">▧</span>
-            Görsel Araçları
-        </a>
-
-        <a href="#" class="menu-link">
-            <span class="menu-icon">◈</span>
-            Görsel Dönüştür
-        </a>
-
-
-        <div class="menu-title">PDF ARAÇLARI</div>
-
-        <a href="#" class="menu-link">
-            <span class="menu-icon">▤</span>
-            PDF Araçları
-        </a>
-
-
-        <div class="menu-title">DÖNÜŞTÜRÜCÜLER</div>
-
-        <a href="#" class="menu-link">
-            <span class="menu-icon">⇄</span>
-            Dosya Dönüştür
-        </a>
-
-        <a href="#" class="menu-link">
-            <span class="menu-icon">⇆</span>
-            Birim Dönüştür
-        </a>
+        <!-- Menü buraya JavaScript ile gelecek -->
+        <div id="sidebar-menu"></div>
 
     </aside>
 
 
     <!-- ANA ALAN -->
-
     <div class="main">
 
         <!-- ÜST BAR -->
-
         <header class="topbar">
 
             <input
                 type="search"
+                id="tool-search"
                 class="search"
                 placeholder="Araç ara..."
+                autocomplete="off"
             >
 
         </header>
 
 
         <!-- İÇERİK -->
-
         <main class="content">
 
             <section class="hero">
@@ -112,243 +66,8 @@
             </section>
 
 
-            <!-- QR ARAÇLARI -->
-
-            <section class="category category-qr">
-
-                <div class="category-header">
-
-                    <h2 class="category-title">
-                        <span class="category-dot"></span>
-                        QR Araçları
-                    </h2>
-
-                </div>
-
-
-                <div class="tools-grid">
-
-
-                    <a href="tools/qr.html" class="tool-card">
-
-                        <div class="tool-icon">
-                            ▣
-                        </div>
-
-                        <h3>
-                            QR Kod Oluştur
-                        </h3>
-
-                        <p>
-                            Metin veya bağlantından
-                            kolayca QR kod oluştur.
-                        </p>
-
-                    </a>
-
-
-                    <a href="tools/qr_reader.html" class="tool-card">
-
-                        <div class="tool-icon">
-                            ⌕
-                        </div>
-
-                        <h3>
-                            QR Kod Oku
-                        </h3>
-
-                        <p>
-                            QR kodlarını hızlı ve kolay
-                            şekilde oku.
-                        </p>
-
-                    </a>
-
-                </div>
-
-            </section>
-
-
-            <!-- GÖRSEL ARAÇLARI -->
-
-            <section class="category category-image">
-
-                <div class="category-header">
-
-                    <h2 class="category-title">
-                        <span class="category-dot"></span>
-                        Görsel Araçları
-                    </h2>
-
-                </div>
-
-
-                <div class="tools-grid">
-
-
-                    <a href="#" class="tool-card">
-
-                        <div class="tool-icon">
-                            ▧
-                        </div>
-
-                        <h3>
-                            Görsel Sıkıştır
-                        </h3>
-
-                        <p>
-                            Görsellerin boyutunu kolayca küçült.
-                        </p>
-
-                    </a>
-
-
-                    <a href="#" class="tool-card">
-
-                        <div class="tool-icon">
-                            ◈
-                        </div>
-
-                        <h3>
-                            JPG → PNG
-                        </h3>
-
-                        <p>
-                            JPG görsellerini PNG formatına dönüştür.
-                        </p>
-
-                    </a>
-
-
-                    <a href="#" class="tool-card">
-
-                        <div class="tool-icon">
-                            ◇
-                        </div>
-
-                        <h3>
-                            PNG → JPG
-                        </h3>
-
-                        <p>
-                            PNG görsellerini JPG formatına dönüştür.
-                        </p>
-
-                    </a>
-
-                </div>
-
-            </section>
-
-
-            <!-- PDF ARAÇLARI -->
-
-            <section class="category category-pdf">
-
-                <div class="category-header">
-
-                    <h2 class="category-title">
-                        <span class="category-dot"></span>
-                        PDF Araçları
-                    </h2>
-
-                </div>
-
-
-                <div class="tools-grid">
-
-
-                    <a href="#" class="tool-card">
-
-                        <div class="tool-icon">
-                            ▤
-                        </div>
-
-                        <h3>
-                            PDF Birleştir
-                        </h3>
-
-                        <p>
-                            Birden fazla PDF dosyasını tek dosyada birleştir.
-                        </p>
-
-                    </a>
-
-
-                    <a href="#" class="tool-card">
-
-                        <div class="tool-icon">
-                            ▤
-                        </div>
-
-                        <h3>
-                            PDF → JPG
-                        </h3>
-
-                        <p>
-                            PDF sayfalarını JPG görsellerine dönüştür.
-                        </p>
-
-                    </a>
-
-                </div>
-
-            </section>
-
-
-            <!-- DÖNÜŞTÜRÜCÜLER -->
-
-            <section class="category category-convert">
-
-                <div class="category-header">
-
-                    <h2 class="category-title">
-                        <span class="category-dot"></span>
-                        Dönüştürücüler
-                    </h2>
-
-                </div>
-
-
-                <div class="tools-grid">
-
-
-                    <a href="#" class="tool-card">
-
-                        <div class="tool-icon">
-                            ⇄
-                        </div>
-
-                        <h3>
-                            Dosya Dönüştür
-                        </h3>
-
-                        <p>
-                            Dosyalarını farklı formatlara dönüştür.
-                        </p>
-
-                    </a>
-
-
-                    <a href="#" class="tool-card">
-
-                        <div class="tool-icon">
-                            ⇆
-                        </div>
-
-                        <h3>
-                            Birim Dönüştür
-                        </h3>
-
-                        <p>
-                            Uzunluk, ağırlık ve diğer birimleri dönüştür.
-                        </p>
-
-                    </a>
-
-                </div>
-
-            </section>
+            <!-- ARAÇLAR JAVASCRIPT TARAFINDAN BURAYA EKLENECEK -->
+            <div id="tools-container"></div>
 
         </main>
 
@@ -360,6 +79,7 @@
     </div>
 
 
+    <script src="js/tools.js"></script>
     <script src="js/main.js"></script>
 
 </body>
