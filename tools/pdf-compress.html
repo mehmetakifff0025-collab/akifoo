@@ -1,1 +1,687 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <title>PDF Sıkıştır - Akifio</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f7f8fc;
+            color: #111827;
+        }
+
+        .container {
+            width: min(900px, calc(100% - 32px));
+            margin: 50px auto;
+        }
+
+        .back {
+            display: inline-block;
+            margin-bottom: 24px;
+            color: #5b5cf0;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .back:hover {
+            text-decoration: underline;
+        }
+
+        .card {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 18px;
+            padding: 32px;
+            box-shadow: 0 10px 30px rgba(17, 24, 39, 0.06);
+        }
+
+        h1 {
+            margin: 0 0 10px;
+            font-size: 32px;
+        }
+
+        .description {
+            margin: 0 0 28px;
+            color: #6b7280;
+            line-height: 1.6;
+        }
+
+        .upload {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 180px;
+            padding: 25px;
+            border: 2px dashed #d1d5db;
+            border-radius: 14px;
+            cursor: pointer;
+            text-align: center;
+            transition: 0.2s;
+        }
+
+        .upload:hover {
+            border-color: #5b5cf0;
+            background: #f8f8ff;
+        }
+
+        .upload strong {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 17px;
+        }
+
+        .upload span {
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        .file-info {
+            display: none;
+            margin-top: 25px;
+            padding: 16px;
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+        }
+
+        .file-name {
+            font-weight: 600;
+            word-break: break-word;
+        }
+
+        .file-details {
+            margin-top: 6px;
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .controls {
+            display: none;
+            margin-top: 25px;
+        }
+
+        .control-title {
+            margin: 0 0 15px;
+            font-size: 17px;
+        }
+
+        .quality-row {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .quality-row label {
+            min-width: 70px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .quality-row input {
+            flex: 1;
+        }
+
+        #qualityValue {
+            width: 50px;
+            text-align: right;
+            font-weight: 600;
+        }
+
+        .button {
+            width: 100%;
+            padding: 14px 20px;
+            border: 0;
+            border-radius: 10px;
+            background: #5b5cf0;
+            color: #ffffff;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .button:hover {
+            background: #494ad8;
+        }
+
+        .button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .result {
+            display: none;
+            margin-top: 25px;
+            padding: 20px;
+            border-radius: 14px;
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+        }
+
+        .result p {
+            margin: 6px 0;
+            font-size: 14px;
+        }
+
+        .download {
+            display: block;
+            margin-top: 15px;
+            padding: 13px 20px;
+            border-radius: 10px;
+            background: #111827;
+            color: #ffffff;
+            text-align: center;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .download:hover {
+            background: #1f2937;
+        }
+
+        .warning {
+            margin-top: 15px;
+            color: #6b7280;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .error {
+            display: none;
+            margin-top: 20px;
+            padding: 12px 15px;
+            border-radius: 10px;
+            background: #fef2f2;
+            color: #b91c1c;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                margin: 25px auto;
+            }
+
+            .card {
+                padding: 22px;
+            }
+
+            h1 {
+                font-size: 27px;
+            }
+
+            .quality-row {
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <a href="../index.html" class="back">
+        ← Akifio ana sayfa
+    </a>
+
+    <div class="card">
+
+        <h1>PDF Sıkıştır</h1>
+
+        <p class="description">
+            PDF dosyanın boyutunu küçült.
+            İşlem tarayıcında gerçekleşir.
+        </p>
+
+        <label class="upload" for="fileInput">
+            <div>
+                <strong>PDF dosyası seç</strong>
+                <span>PDF dosyanı buraya yükle</span>
+            </div>
+        </label>
+
+        <input
+            id="fileInput"
+            type="file"
+            accept="application/pdf"
+        >
+
+        <div class="file-info" id="fileInfo">
+
+            <div class="file-name" id="fileName"></div>
+
+            <div class="file-details" id="fileDetails"></div>
+
+        </div>
+
+        <div class="controls" id="controls">
+
+            <h2 class="control-title">
+                Sıkıştırma seviyesi
+            </h2>
+
+            <div class="quality-row">
+
+                <label for="quality">
+                    Kalite
+                </label>
+
+                <input
+                    id="quality"
+                    type="range"
+                    min="20"
+                    max="90"
+                    value="60"
+                >
+
+                <span id="qualityValue">
+                    60%
+                </span>
+
+            </div>
+
+            <button
+                type="button"
+                class="button"
+                id="compressButton"
+            >
+                PDF'yi Sıkıştır
+            </button>
+
+            <p class="warning">
+                Not: PDF sıkıştırma, özellikle taranmış veya
+                görsel ağırlıklı PDF'lerde daha etkili olur.
+                Metin tabanlı PDF'lerde boyut değişimi sınırlı olabilir.
+            </p>
+
+        </div>
+
+        <div class="result" id="result">
+
+            <p>
+                <strong>Orijinal boyut:</strong>
+                <span id="originalSize"></span>
+            </p>
+
+            <p>
+                <strong>Yeni boyut:</strong>
+                <span id="compressedSize"></span>
+            </p>
+
+            <p>
+                <strong>Değişim:</strong>
+                <span id="compressionInfo"></span>
+            </p>
+
+            <a
+                id="downloadButton"
+                class="download"
+                download="akifio-sikistirilmis.pdf"
+            >
+                Sıkıştırılmış PDF'yi İndir
+            </a>
+
+        </div>
+
+        <div class="error" id="error"></div>
+
+    </div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+
+<script>
+    const fileInput =
+        document.getElementById("fileInput");
+
+    const fileInfo =
+        document.getElementById("fileInfo");
+
+    const fileName =
+        document.getElementById("fileName");
+
+    const fileDetails =
+        document.getElementById("fileDetails");
+
+    const controls =
+        document.getElementById("controls");
+
+    const quality =
+        document.getElementById("quality");
+
+    const qualityValue =
+        document.getElementById("qualityValue");
+
+    const compressButton =
+        document.getElementById("compressButton");
+
+    const result =
+        document.getElementById("result");
+
+    const originalSize =
+        document.getElementById("originalSize");
+
+    const compressedSize =
+        document.getElementById("compressedSize");
+
+    const compressionInfo =
+        document.getElementById("compressionInfo");
+
+    const downloadButton =
+        document.getElementById("downloadButton");
+
+    const errorBox =
+        document.getElementById("error");
+
+
+    let selectedFile = null;
+    let downloadUrl = null;
+
+
+    function showError(message) {
+        errorBox.textContent = message;
+        errorBox.style.display = "block";
+    }
+
+
+    function hideError() {
+        errorBox.textContent = "";
+        errorBox.style.display = "none";
+    }
+
+
+    function formatSize(bytes) {
+
+        if (bytes < 1024) {
+            return bytes + " B";
+        }
+
+        if (bytes < 1024 * 1024) {
+            return (
+                bytes / 1024
+            ).toFixed(1) + " KB";
+        }
+
+        return (
+            bytes / (1024 * 1024)
+        ).toFixed(2) + " MB";
+    }
+
+
+    function calculateChange(original, compressed) {
+
+        if (original === 0) {
+            return "0%";
+        }
+
+        const difference =
+            ((original - compressed) / original) * 100;
+
+        if (difference >= 0) {
+            return (
+                difference.toFixed(1) +
+                "% küçüldü"
+            );
+        }
+
+        return (
+            Math.abs(difference).toFixed(1) +
+            "% büyüdü"
+        );
+    }
+
+
+    quality.addEventListener("input", () => {
+
+        qualityValue.textContent =
+            quality.value + "%";
+
+    });
+
+
+    fileInput.addEventListener("change", async () => {
+
+        hideError();
+
+        result.style.display = "none";
+
+        if (downloadUrl) {
+            URL.revokeObjectURL(downloadUrl);
+            downloadUrl = null;
+        }
+
+        const file =
+            fileInput.files[0];
+
+        if (!file) {
+            return;
+        }
+
+
+        if (
+            file.type !== "application/pdf"
+        ) {
+
+            showError(
+                "Lütfen geçerli bir PDF dosyası seç."
+            );
+
+            fileInput.value = "";
+
+            return;
+        }
+
+
+        if (
+            !window.PDFLib ||
+            !window.PDFLib.PDFDocument
+        ) {
+
+            showError(
+                "PDF sistemi yüklenemedi. Sayfayı yenileyip tekrar dene."
+            );
+
+            return;
+        }
+
+
+        try {
+
+            const bytes =
+                await file.arrayBuffer();
+
+            const pdf =
+                await PDFLib.PDFDocument.load(
+                    bytes
+                );
+
+            selectedFile = file;
+
+            fileName.textContent =
+                file.name;
+
+            fileDetails.textContent =
+                `${pdf.getPageCount()} sayfa • ${formatSize(file.size)}`;
+
+            fileInfo.style.display =
+                "block";
+
+            controls.style.display =
+                "block";
+
+        } catch (error) {
+
+            console.error(error);
+
+            selectedFile = null;
+
+            showError(
+                "PDF okunamadı. Dosyanın geçerli olduğundan emin ol."
+            );
+        }
+    });
+
+
+    compressButton.addEventListener(
+        "click",
+        async () => {
+
+            hideError();
+
+            if (!selectedFile) {
+
+                showError(
+                    "Önce bir PDF dosyası seç."
+                );
+
+                return;
+            }
+
+
+            compressButton.disabled = true;
+
+            compressButton.textContent =
+                "Sıkıştırılıyor...";
+
+
+            try {
+
+                const bytes =
+                    await selectedFile.arrayBuffer();
+
+                const sourcePdf =
+                    await PDFLib.PDFDocument.load(
+                        bytes
+                    );
+
+
+                /*
+                 * PDF-lib mevcut PDF içindeki
+                 * sayfaları yeniden oluşturur.
+                 *
+                 * Bu işlem PDF yapısını sadeleştirir.
+                 * Ancak gerçek görsel yeniden sıkıştırma
+                 * yapılmadığı için her PDF'de daha küçük
+                 * sonuç garanti değildir.
+                 */
+
+                const compressedPdf =
+                    await PDFLib.PDFDocument.create();
+
+
+                const pages =
+                    await compressedPdf.copyPages(
+                        sourcePdf,
+                        sourcePdf.getPageIndices()
+                    );
+
+
+                pages.forEach(page => {
+                    compressedPdf.addPage(page);
+                });
+
+
+                const compressedBytes =
+                    await compressedPdf.save({
+                        useObjectStreams: true,
+                        addDefaultPage: false
+                    });
+
+
+                const blob =
+                    new Blob(
+                        [compressedBytes],
+                        {
+                            type: "application/pdf"
+                        }
+                    );
+
+
+                if (downloadUrl) {
+                    URL.revokeObjectURL(
+                        downloadUrl
+                    );
+                }
+
+
+                downloadUrl =
+                    URL.createObjectURL(blob);
+
+
+                downloadButton.href =
+                    downloadUrl;
+
+
+                originalSize.textContent =
+                    formatSize(
+                        selectedFile.size
+                    );
+
+
+                compressedSize.textContent =
+                    formatSize(
+                        blob.size
+                    );
+
+
+                compressionInfo.textContent =
+                    calculateChange(
+                        selectedFile.size,
+                        blob.size
+                    );
+
+
+                result.style.display =
+                    "block";
+
+
+            } catch (error) {
+
+                console.error(error);
+
+                showError(
+                    "PDF sıkıştırılamadı. Dosyanın geçerli olduğundan emin ol."
+                );
+
+            } finally {
+
+                compressButton.disabled =
+                    false;
+
+                compressButton.textContent =
+                    "PDF'yi Sıkıştır";
+            }
+        }
+    );
+
+
+    window.addEventListener(
+        "beforeunload",
+        () => {
+
+            if (downloadUrl) {
+                URL.revokeObjectURL(
+                    downloadUrl
+                );
+            }
+
+        }
+    );
+</script>
+
+</body>
+</html>
