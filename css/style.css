@@ -98,32 +98,45 @@ body {
     min-height: 100vh;
 }
 
-/* Üst bar */
+/* =========================
+   ÜST BAR
+   ========================= */
 
 .topbar {
     position: sticky;
     top: 0;
     z-index: 10;
+
     height: 72px;
     padding: 0 40px;
+
     display: flex;
     align-items: center;
     justify-content: space-between;
+
     background: rgba(255, 255, 255, 0.94);
     border-bottom: 1px solid #e5e7eb;
+
     backdrop-filter: blur(10px);
 }
 
-/* Arama */
+/* =========================
+   ARAMA
+   ========================= */
 
 .search {
     width: 360px;
     height: 42px;
+
     padding: 0 16px;
+
     border: 1px solid #e5e7eb;
     border-radius: 10px;
+
     outline: none;
+
     background: #f9fafb;
+
     font-size: 14px;
 }
 
@@ -206,32 +219,48 @@ body {
 
 .tool-card {
     display: block;
+
     min-height: 170px;
     padding: 24px;
+
     background: #ffffff;
+
     border: 1px solid #e5e7eb;
     border-radius: 16px;
+
     color: #111827;
     text-decoration: none;
-    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+
+    transition:
+        transform 0.2s,
+        box-shadow 0.2s,
+        border-color 0.2s;
 }
 
 .tool-card:hover {
     transform: translateY(-3px);
+
     border-color: #d7d8ff;
-    box-shadow: 0 12px 30px rgba(17, 24, 39, 0.08);
+
+    box-shadow:
+        0 12px 30px rgba(17, 24, 39, 0.08);
 }
 
 .tool-icon {
     width: 46px;
     height: 46px;
+
     margin-bottom: 18px;
+
     display: flex;
     align-items: center;
     justify-content: center;
+
     border-radius: 12px;
+
     background: #eef0ff;
     color: #5b5cf0;
+
     font-size: 21px;
 }
 
@@ -242,7 +271,9 @@ body {
 
 .tool-card p {
     margin: 0;
+
     color: #6b7280;
+
     font-size: 13px;
     line-height: 1.5;
 }
@@ -293,7 +324,9 @@ body {
 
 .footer {
     padding: 30px 40px;
+
     border-top: 1px solid #e5e7eb;
+
     color: #9ca3af;
     font-size: 13px;
 }
@@ -305,12 +338,14 @@ body {
 @media (max-width: 1000px) {
 
     .tools-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
     }
 
     .search {
         width: 280px;
     }
+
 }
 
 /* =========================
@@ -319,23 +354,35 @@ body {
 
 @media (max-width: 700px) {
 
+    /* SOL MENÜ */
+
     .sidebar {
         position: static;
+
         width: 100%;
         height: auto;
+
         border-right: none;
         border-bottom: 1px solid #e5e7eb;
     }
+
+
+    /* ANA ALAN */
 
     .main {
         margin-left: 0;
     }
 
-    /* Üst bar */
+
+    /* =========================
+       ÜST BAR
+       ========================= */
 
     .topbar {
         position: sticky;
         top: 0;
+
+        z-index: 10;
 
         width: 100%;
         height: auto;
@@ -345,22 +392,33 @@ body {
 
         display: flex;
         flex-direction: column;
+
         align-items: stretch;
         justify-content: flex-start;
 
         gap: 12px;
     }
 
-    /* Arama */
+
+    /* =========================
+       ARAÇ ARA
+       ========================= */
 
     .search {
         width: 100%;
         max-width: 100%;
+
         height: 42px;
+
         flex-shrink: 0;
+
+        order: 1;
     }
 
-    /* Türk bayrağı alanı */
+
+    /* =========================
+       TÜRK BAYRAĞI ALANI
+       ========================= */
 
     .turkey-banner {
         display: flex;
@@ -378,15 +436,21 @@ body {
         padding: 0;
 
         overflow: hidden;
+
+        order: 2;
     }
 
-    /* Bayrak */
+
+    /* =========================
+       TÜRK BAYRAĞI
+       ========================= */
 
     .turkey-flag-image {
         display: block !important;
 
         width: 210px;
         max-width: 65%;
+
         height: auto;
 
         object-fit: contain;
@@ -394,39 +458,54 @@ body {
         flex-shrink: 1;
     }
 
-    /* Bayrak yazısı */
+
+    /* =========================
+       TÜRK BAYRAĞI YAZISI
+       ========================= */
 
     .turkey-text {
         font-size: 11px;
         line-height: 1.15;
     }
 
+
     .turkey-text strong {
         margin-top: 3px;
+
         font-size: 17px;
     }
+
 
     .turkey-text .star {
         right: -18px;
         bottom: 0;
+
         font-size: 16px;
     }
 
-    /* İçerik */
+
+    /* =========================
+       İÇERİK
+       ========================= */
 
     .content {
         padding: 35px 20px 60px;
     }
 
+
     .hero h1 {
         font-size: 34px;
     }
 
-    /* Araç kartları */
+
+    /* =========================
+       ARAÇ KARTLARI
+       ========================= */
 
     .tools-grid {
         grid-template-columns: 1fr;
     }
+
 }
 
 /* =========================
@@ -440,26 +519,32 @@ body {
         padding: 10px 12px;
     }
 
+
     .turkey-banner {
         height: 65px;
         gap: 8px;
     }
+
 
     .turkey-flag-image {
         width: 170px;
         max-width: 60%;
     }
 
+
     .turkey-text {
         font-size: 10px;
     }
+
 
     .turkey-text strong {
         font-size: 15px;
     }
 
+
     .turkey-text .star {
         right: -15px;
         font-size: 14px;
     }
+
 }
