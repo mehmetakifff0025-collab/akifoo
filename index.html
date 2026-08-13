@@ -9,180 +9,228 @@
     <link rel="stylesheet" href="css/style.css">
 
     <style>
-        /* TÜRKİYE BANNER */
+        /* =====================================================
+           AKIFIO TÜRKİYE ALANI
+           Sadece üst boş alanda kullanılır.
+        ===================================================== */
+
         .turkey-banner {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 18px;
             flex: 1;
             height: 100%;
+            min-height: 90px;
+
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+
+            gap: 22px;
+            padding: 8px 35px 8px 20px;
+
             overflow: hidden;
-            padding: 0 25px;
         }
 
-        /* DALGALANAN BAYRAK */
-        .turkey-flag {
+        /* BAYRAK ALANI */
+
+        .flag-wrapper {
             position: relative;
-            width: 76px;
-            height: 50px;
-            background: #e30a17;
-            border-radius: 4px;
-            box-shadow: 0 7px 20px rgba(227, 10, 23, 0.18);
+
+            width: 115px;
+            height: 72px;
+
+            flex-shrink: 0;
+
+            perspective: 700px;
+
+            filter:
+                drop-shadow(0 8px 12px rgba(0, 0, 0, 0.12));
+        }
+
+        .turkish-flag {
+            width: 115px;
+            height: 72px;
+
+            overflow: visible;
+
             transform-origin: left center;
-            animation: flagWave 3.8s ease-in-out infinite;
+
+            animation:
+                flagFloat 4.5s ease-in-out infinite;
         }
 
-        /* HAFİF DALGA GÖLGESİ */
-        .turkey-flag::before {
-            content: "";
-            position: absolute;
-            inset: 0;
-            border-radius: 4px;
-            background: linear-gradient(
-                90deg,
-                rgba(255,255,255,0.08),
-                transparent 35%,
-                rgba(0,0,0,0.08)
-            );
-            pointer-events: none;
-        }
+        /* BAYRAĞIN DALGALANMASI */
 
-        /* HİLAL */
-        .flag-crescent {
-            position: absolute;
-            width: 25px;
-            height: 25px;
-            border-radius: 50%;
-            background: #fff;
-            left: 18px;
-            top: 12px;
-        }
+        @keyframes flagFloat {
 
-        .flag-crescent::after {
-            content: "";
-            position: absolute;
-            width: 21px;
-            height: 21px;
-            border-radius: 50%;
-            background: #e30a17;
-            left: 7px;
-            top: -2px;
-        }
-
-        /* YILDIZ */
-        .flag-star {
-            position: absolute;
-            color: #fff;
-            font-size: 16px;
-            left: 45px;
-            top: 17px;
-            z-index: 2;
-            transform: rotate(-10deg);
-        }
-
-        /* YAZI */
-        .turkey-text {
-            color: #6b7280;
-            font-size: 15px;
-            font-weight: 500;
-            letter-spacing: 0.2px;
-            white-space: nowrap;
-        }
-
-        .turkey-text strong {
-            color: #111827;
-            font-weight: 700;
-        }
-
-        /* BAYRAK ANİMASYONU */
-        @keyframes flagWave {
-            0%, 100% {
+            0% {
                 transform:
-                    perspective(500px)
                     rotateY(0deg)
+                    rotateZ(0deg)
                     skewY(0deg);
             }
 
-            25% {
+            20% {
                 transform:
-                    perspective(500px)
                     rotateY(-7deg)
+                    rotateZ(0.5deg)
                     skewY(1deg);
             }
 
-            50% {
+            40% {
                 transform:
-                    perspective(500px)
-                    rotateY(5deg)
+                    rotateY(6deg)
+                    rotateZ(-0.5deg)
                     skewY(-1deg);
             }
 
-            75% {
+            60% {
                 transform:
-                    perspective(500px)
-                    rotateY(-4deg)
-                    skewY(0.5deg);
+                    rotateY(-5deg)
+                    rotateZ(0.4deg)
+                    skewY(0.7deg);
+            }
+
+            80% {
+                transform:
+                    rotateY(3deg)
+                    rotateZ(-0.2deg)
+                    skewY(-0.4deg);
+            }
+
+            100% {
+                transform:
+                    rotateY(0deg)
+                    rotateZ(0deg)
+                    skewY(0deg);
             }
         }
 
-        /* MOBİL */
-        @media (max-width: 700px) {
+        /* YAZI */
+
+        .turkey-message {
+            display: flex;
+            flex-direction: column;
+
+            align-items: flex-start;
+
+            line-height: 1.25;
+
+            white-space: nowrap;
+        }
+
+        .turkey-message-main {
+            font-size: 16px;
+
+            color: #6b7280;
+
+            font-weight: 500;
+
+            letter-spacing: 0.2px;
+        }
+
+        .turkey-message-main strong {
+            color: #111827;
+
+            font-weight: 700;
+        }
+
+        .turkey-message-line {
+            width: 34px;
+            height: 2px;
+
+            margin-top: 7px;
+
+            border-radius: 10px;
+
+            background: #e30a17;
+
+            opacity: 0.8;
+        }
+
+
+        /* =====================================================
+           MOBİL
+        ===================================================== */
+
+        @media (max-width: 850px) {
 
             .turkey-banner {
-                gap: 10px;
-                padding: 0 10px;
+                padding-right: 20px;
+
+                gap: 14px;
             }
 
-            .turkey-flag {
-                width: 58px;
-                height: 38px;
+            .flag-wrapper,
+            .turkish-flag {
+                width: 90px;
+                height: 56px;
             }
 
-            .turkey-text {
-                font-size: 12px;
-            }
-
-            .flag-crescent {
-                transform: scale(0.75);
-                transform-origin: left top;
-            }
-
-            .flag-star {
-                transform: scale(0.75) rotate(-10deg);
-                transform-origin: left top;
+            .turkey-message-main {
+                font-size: 14px;
             }
         }
+
+
+        @media (max-width: 650px) {
+
+            .turkey-banner {
+                display: none;
+            }
+        }
+
     </style>
 </head>
 
 <body>
 
-    <!-- SOL MENÜ -->
+
+    <!-- =====================================================
+         SOL MENÜ
+    ===================================================== -->
+
     <aside class="sidebar">
 
         <a href="index.html" class="logo">
             Akif<span>io</span>
         </a>
 
-        <div class="menu-title">ANA MENÜ</div>
+        <div class="menu-title">
+            ANA MENÜ
+        </div>
 
         <a href="index.html" class="menu-link active">
-            <span class="menu-icon">⌂</span>
+
+            <span class="menu-icon">
+                ⌂
+            </span>
+
             Ana Sayfa
+
         </a>
 
         <!-- Menü buraya JavaScript ile gelecek -->
+
         <div id="sidebar-menu"></div>
 
     </aside>
 
 
-    <!-- ANA ALAN -->
+
+    <!-- =====================================================
+         ANA ALAN
+    ===================================================== -->
+
     <div class="main">
 
-        <!-- ÜST BAR -->
+
+        <!-- =================================================
+             ÜST BAR
+        ================================================= -->
+
         <header class="topbar">
+
+
+            <!-- MEVCUT ARAMA KUTUSU -->
 
             <input
                 type="search"
@@ -192,56 +240,308 @@
                 autocomplete="off"
             >
 
-            <!-- TÜRKİYE ALANI -->
+
+
+            <!-- =================================================
+                 TÜRKİYE / BAYRAK ALANI
+            ================================================= -->
+
             <div class="turkey-banner">
 
-                <div class="turkey-flag">
-                    <div class="flag-crescent"></div>
-                    <div class="flag-star">★</div>
+
+                <!-- DALGALANAN BAYRAK -->
+
+                <div class="flag-wrapper">
+
+                    <svg
+                        class="turkish-flag"
+                        viewBox="0 0 300 190"
+                        xmlns="http://www.w3.org/2000/svg"
+                        aria-label="Türk bayrağı"
+                    >
+
+                        <defs>
+
+                            <!-- Kumaş dalgası -->
+
+                            <linearGradient
+                                id="flagRed"
+                                x1="0"
+                                y1="0"
+                                x2="1"
+                                y2="0"
+                            >
+
+                                <stop
+                                    offset="0%"
+                                    stop-color="#c90817"
+                                />
+
+                                <stop
+                                    offset="35%"
+                                    stop-color="#e30a17"
+                                />
+
+                                <stop
+                                    offset="65%"
+                                    stop-color="#d60918"
+                                />
+
+                                <stop
+                                    offset="100%"
+                                    stop-color="#b80715"
+                                />
+
+                            </linearGradient>
+
+
+                            <!-- Hafif kumaş gölgesi -->
+
+                            <linearGradient
+                                id="fabricShade"
+                                x1="0"
+                                y1="0"
+                                x2="1"
+                                y2="0"
+                            >
+
+                                <stop
+                                    offset="0%"
+                                    stop-color="rgba(0,0,0,0.10)"
+                                />
+
+                                <stop
+                                    offset="20%"
+                                    stop-color="rgba(255,255,255,0.08)"
+                                />
+
+                                <stop
+                                    offset="45%"
+                                    stop-color="rgba(0,0,0,0.08)"
+                                />
+
+                                <stop
+                                    offset="70%"
+                                    stop-color="rgba(255,255,255,0.06)"
+                                />
+
+                                <stop
+                                    offset="100%"
+                                    stop-color="rgba(0,0,0,0.12)"
+                                />
+
+                            </linearGradient>
+
+
+                            <!-- Dalgalı maske -->
+
+                            <clipPath id="waveClip">
+
+                                <path
+                                    d="
+                                    M 0 12
+                                    C 35 0, 55 24, 90 12
+                                    C 125 0, 145 24, 180 12
+                                    C 215 0, 240 25, 300 10
+                                    L 300 180
+                                    C 240 168, 215 192, 180 180
+                                    C 145 168, 125 192, 90 180
+                                    C 55 168, 35 192, 0 178
+                                    Z
+                                    "
+                                />
+
+                            </clipPath>
+
+                        </defs>
+
+
+                        <!-- BAYRAK -->
+
+                        <g clip-path="url(#waveClip)">
+
+                            <rect
+                                x="0"
+                                y="0"
+                                width="300"
+                                height="190"
+                                fill="url(#flagRed)"
+                            />
+
+
+                            <!-- Kumaş ışık/gölge -->
+
+                            <rect
+                                x="0"
+                                y="0"
+                                width="300"
+                                height="190"
+                                fill="url(#fabricShade)"
+                                opacity="0.55"
+                            />
+
+
+                            <!-- HİLAL -->
+
+                            <circle
+                                cx="82"
+                                cy="95"
+                                r="48"
+                                fill="#ffffff"
+                            />
+
+                            <circle
+                                cx="101"
+                                cy="86"
+                                r="39"
+                                fill="#d60918"
+                            />
+
+
+                            <!-- YILDIZ -->
+
+                            <polygon
+                                points="
+                                137,95
+                                143,111
+                                160,111
+                                147,121
+                                152,138
+                                137,128
+                                122,138
+                                127,121
+                                114,111
+                                131,111
+                                "
+                                fill="#ffffff"
+                            />
+
+
+                            <!-- Kumaş çizgileri -->
+
+                            <path
+                                d="
+                                M 30 0
+                                C 50 45, 50 145, 30 190
+                                "
+                                fill="none"
+                                stroke="rgba(255,255,255,0.08)"
+                                stroke-width="10"
+                            />
+
+                            <path
+                                d="
+                                M 115 0
+                                C 135 45, 135 145, 115 190
+                                "
+                                fill="none"
+                                stroke="rgba(0,0,0,0.07)"
+                                stroke-width="12"
+                            />
+
+                            <path
+                                d="
+                                M 205 0
+                                C 185 45, 185 145, 205 190
+                                "
+                                fill="none"
+                                stroke="rgba(255,255,255,0.06)"
+                                stroke-width="11"
+                            />
+
+                        </g>
+
+                    </svg>
+
                 </div>
 
-                <div class="turkey-text">
-                    Rengi belli, <strong>adresi belli.</strong>
+
+
+                <!-- YAZI -->
+
+                <div class="turkey-message">
+
+                    <div class="turkey-message-main">
+
+                        Rengi belli,
+                        <strong>adresi belli.</strong>
+
+                    </div>
+
+                    <div class="turkey-message-line"></div>
+
                 </div>
+
 
             </div>
 
         </header>
 
 
-        <!-- İÇERİK -->
+
+        <!-- =====================================================
+             İÇERİK
+        ===================================================== -->
+
         <main class="content">
+
 
             <section class="hero">
 
                 <h1>
+
                     Dijital işlerini
-                    <span>kolaylaştır.</span>
+
+                    <span>
+                        kolaylaştır.
+                    </span>
+
                 </h1>
 
+
                 <p>
+
                     İhtiyacın olan tüm dijital araçlar
                     tek bir yerde. Hızlı, basit ve ücretsiz.
+
                 </p>
 
             </section>
 
 
+
             <!-- ARAÇLAR JAVASCRIPT TARAFINDAN BURAYA EKLENECEK -->
+
             <div id="tools-container"></div>
+
 
         </main>
 
 
+
+        <!-- =====================================================
+             FOOTER
+        ===================================================== -->
+
         <footer class="footer">
+
             © 2026 Akifio
+
         </footer>
+
 
     </div>
 
 
+
+    <!-- =====================================================
+         JAVASCRIPT
+    ===================================================== -->
+
     <script src="js/tools.js"></script>
+
     <script src="js/main.js"></script>
+
 
 </body>
 </html>
