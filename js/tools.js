@@ -46,13 +46,13 @@ const AKIFIO_TOOLS = [
     },
 
     {
-        name: "Görsel Dönüştür",
-        description: "JPG, PNG ve diğer görsel formatları arasında dönüştür.",
-        category: "Görsel Araçları",
-        icon: "◈",
-        url: ""tools/jpg-to-pdf.html",
-        active: true
-    },
+    name: "JPG → PDF",
+    description: "JPG görsellerini kolayca PDF dosyasına dönüştür.",
+    category: "PDF Araçları",
+    icon: "▤",
+    url: "tools/jpg-to-pdf.html",
+    active: true
+},
 
 
     // =========================
