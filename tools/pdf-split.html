@@ -1,1 +1,722 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <title>PDF Ayır - Akifio</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f7f8fc;
+            color: #111827;
+        }
+
+        .container {
+            width: min(900px, calc(100% - 32px));
+            margin: 50px auto;
+        }
+
+        .back {
+            display: inline-block;
+            margin-bottom: 24px;
+            color: #5b5cf0;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .back:hover {
+            text-decoration: underline;
+        }
+
+        .card {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 18px;
+            padding: 32px;
+            box-shadow: 0 10px 30px rgba(17, 24, 39, 0.06);
+        }
+
+        h1 {
+            margin: 0 0 10px;
+            font-size: 32px;
+        }
+
+        .description {
+            margin: 0 0 28px;
+            color: #6b7280;
+            line-height: 1.6;
+        }
+
+        .upload {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 180px;
+            padding: 25px;
+            border: 2px dashed #d1d5db;
+            border-radius: 14px;
+            cursor: pointer;
+            text-align: center;
+            transition: 0.2s;
+        }
+
+        .upload:hover {
+            border-color: #5b5cf0;
+            background: #f8f8ff;
+        }
+
+        .upload strong {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 17px;
+        }
+
+        .upload span {
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        .file-info {
+            display: none;
+            margin-top: 25px;
+            padding: 16px;
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+        }
+
+        .file-name {
+            font-weight: 600;
+            word-break: break-word;
+        }
+
+        .file-pages {
+            margin-top: 6px;
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .options {
+            display: none;
+            margin-top: 25px;
+        }
+
+        .option-title {
+            margin: 0 0 15px;
+            font-size: 17px;
+        }
+
+        .option-row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .option-row label {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .page-input {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 9px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .page-input:focus {
+            border-color: #5b5cf0;
+        }
+
+        .help {
+            margin: 0 0 18px;
+            color: #6b7280;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .button {
+            width: 100%;
+            padding: 14px 20px;
+            border: 0;
+            border-radius: 10px;
+            background: #5b5cf0;
+            color: #ffffff;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .button:hover {
+            background: #494ad8;
+        }
+
+        .button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .result {
+            display: none;
+            margin-top: 25px;
+            padding: 20px;
+            border-radius: 14px;
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+        }
+
+        .result h2 {
+            margin: 0 0 15px;
+            font-size: 18px;
+        }
+
+        .download-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .download-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 9px;
+        }
+
+        .download-item span {
+            flex: 1;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .download-link {
+            padding: 8px 12px;
+            border-radius: 7px;
+            background: #111827;
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .download-link:hover {
+            background: #1f2937;
+        }
+
+        .error {
+            display: none;
+            margin-top: 20px;
+            padding: 12px 15px;
+            border-radius: 10px;
+            background: #fef2f2;
+            color: #b91c1c;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                margin: 25px auto;
+            }
+
+            .card {
+                padding: 22px;
+            }
+
+            h1 {
+                font-size: 27px;
+            }
+
+            .option-row {
+                align-items: stretch;
+                flex-direction: column;
+            }
+
+            .download-item {
+                align-items: stretch;
+                flex-direction: column;
+            }
+
+            .download-link {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <a href="../index.html" class="back">
+        ← Akifio ana sayfa
+    </a>
+
+    <div class="card">
+
+        <h1>PDF Ayır</h1>
+
+        <p class="description">
+            PDF dosyanı sayfalara ayır ve istediğin sayfaları
+            ayrı PDF dosyaları olarak indir.
+        </p>
+
+        <label class="upload" for="fileInput">
+            <div>
+                <strong>PDF dosyası seç</strong>
+                <span>PDF dosyanı buraya yükle</span>
+            </div>
+        </label>
+
+        <input
+            id="fileInput"
+            type="file"
+            accept="application/pdf"
+        >
+
+        <div class="file-info" id="fileInfo">
+            <div class="file-name" id="fileName"></div>
+            <div class="file-pages" id="filePages"></div>
+        </div>
+
+        <div class="options" id="options">
+
+            <h2 class="option-title">
+                Ayrılacak sayfalar
+            </h2>
+
+            <p class="help">
+                Örnek: <strong>1,3,5</strong> veya
+                <strong>1-3</strong> veya
+                <strong>1,3-5,8</strong>
+            </p>
+
+            <div class="option-row">
+                <label for="pageInput">Sayfalar</label>
+
+                <input
+                    id="pageInput"
+                    class="page-input"
+                    type="text"
+                    placeholder="Örn: 1,3-5,8"
+                    autocomplete="off"
+                >
+            </div>
+
+            <button
+                type="button"
+                class="button"
+                id="splitButton"
+            >
+                PDF'yi Ayır
+            </button>
+
+        </div>
+
+        <div class="result" id="result">
+
+            <h2>PDF'ler hazır</h2>
+
+            <div
+                class="download-list"
+                id="downloadList"
+            ></div>
+
+        </div>
+
+        <div class="error" id="error"></div>
+
+    </div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+
+<script>
+    const fileInput = document.getElementById("fileInput");
+    const fileInfo = document.getElementById("fileInfo");
+    const fileName = document.getElementById("fileName");
+    const filePages = document.getElementById("filePages");
+    const options = document.getElementById("options");
+    const pageInput = document.getElementById("pageInput");
+    const splitButton = document.getElementById("splitButton");
+    const result = document.getElementById("result");
+    const downloadList = document.getElementById("downloadList");
+    const errorBox = document.getElementById("error");
+
+    let selectedFile = null;
+    let pageCount = 0;
+    let downloadUrls = [];
+
+
+    function showError(message) {
+        errorBox.textContent = message;
+        errorBox.style.display = "block";
+    }
+
+
+    function hideError() {
+        errorBox.textContent = "";
+        errorBox.style.display = "none";
+    }
+
+
+    function clearDownloadUrls() {
+        downloadUrls.forEach(url => {
+            URL.revokeObjectURL(url);
+        });
+
+        downloadUrls = [];
+    }
+
+
+    function parsePages(input, totalPages) {
+
+        const pages = new Set();
+
+        const parts = input
+            .split(",")
+            .map(part => part.trim())
+            .filter(Boolean);
+
+
+        if (parts.length === 0) {
+            throw new Error("Sayfa numarası gir.");
+        }
+
+
+        for (const part of parts) {
+
+            if (part.includes("-")) {
+
+                const range = part
+                    .split("-")
+                    .map(value => value.trim());
+
+
+                if (range.length !== 2) {
+                    throw new Error("Sayfa aralığı geçersiz.");
+                }
+
+
+                const start = Number(range[0]);
+                const end = Number(range[1]);
+
+
+                if (
+                    !Number.isInteger(start) ||
+                    !Number.isInteger(end) ||
+                    start < 1 ||
+                    end < 1 ||
+                    start > totalPages ||
+                    end > totalPages ||
+                    start > end
+                ) {
+                    throw new Error(
+                        "Geçersiz sayfa aralığı."
+                    );
+                }
+
+
+                for (let page = start; page <= end; page++) {
+                    pages.add(page);
+                }
+
+            } else {
+
+                const page = Number(part);
+
+
+                if (
+                    !Number.isInteger(page) ||
+                    page < 1 ||
+                    page > totalPages
+                ) {
+                    throw new Error(
+                        "Geçersiz sayfa numarası."
+                    );
+                }
+
+
+                pages.add(page);
+            }
+        }
+
+
+        return Array.from(pages).sort(
+            (a, b) => a - b
+        );
+    }
+
+
+    fileInput.addEventListener("change", async () => {
+
+        hideError();
+
+        clearDownloadUrls();
+
+        result.style.display = "none";
+
+        const file = fileInput.files[0];
+
+        if (!file) {
+            return;
+        }
+
+
+        if (file.type !== "application/pdf") {
+
+            showError(
+                "Lütfen geçerli bir PDF dosyası seç."
+            );
+
+            fileInput.value = "";
+
+            return;
+        }
+
+
+        if (
+            !window.PDFLib ||
+            !window.PDFLib.PDFDocument
+        ) {
+
+            showError(
+                "PDF sistemi yüklenemedi. Sayfayı yenileyip tekrar dene."
+            );
+
+            return;
+        }
+
+
+        try {
+
+            const bytes =
+                await file.arrayBuffer();
+
+            const pdf =
+                await PDFLib.PDFDocument.load(bytes);
+
+            selectedFile = file;
+
+            pageCount =
+                pdf.getPageCount();
+
+            fileName.textContent =
+                file.name;
+
+            filePages.textContent =
+                `${pageCount} sayfa • ${formatSize(file.size)}`;
+
+            fileInfo.style.display =
+                "block";
+
+            options.style.display =
+                "block";
+
+            pageInput.value = "";
+
+        } catch (error) {
+
+            console.error(error);
+
+            showError(
+                "PDF okunamadı. Dosyanın geçerli olduğundan emin ol."
+            );
+
+            selectedFile = null;
+            pageCount = 0;
+        }
+    });
+
+
+    splitButton.addEventListener("click", async () => {
+
+        hideError();
+
+        if (!selectedFile) {
+
+            showError(
+                "Önce bir PDF dosyası seç."
+            );
+
+            return;
+        }
+
+
+        let pages;
+
+        try {
+
+            pages = parsePages(
+                pageInput.value,
+                pageCount
+            );
+
+        } catch (error) {
+
+            showError(error.message);
+
+            return;
+        }
+
+
+        clearDownloadUrls();
+
+        downloadList.innerHTML = "";
+
+        result.style.display = "none";
+
+        splitButton.disabled = true;
+
+        splitButton.textContent =
+            "PDF ayrılıyor...";
+
+
+        try {
+
+            const bytes =
+                await selectedFile.arrayBuffer();
+
+            const sourcePdf =
+                await PDFLib.PDFDocument.load(bytes);
+
+
+            for (
+                let index = 0;
+                index < pages.length;
+                index++
+            ) {
+
+                const pageNumber =
+                    pages[index];
+
+                const newPdf =
+                    await PDFLib.PDFDocument.create();
+
+
+                const [copiedPage] =
+                    await newPdf.copyPages(
+                        sourcePdf,
+                        [pageNumber - 1]
+                    );
+
+
+                newPdf.addPage(copiedPage);
+
+
+                const pdfBytes =
+                    await newPdf.save();
+
+
+                const blob =
+                    new Blob(
+                        [pdfBytes],
+                        {
+                            type: "application/pdf"
+                        }
+                    );
+
+
+                const url =
+                    URL.createObjectURL(blob);
+
+
+                downloadUrls.push(url);
+
+
+                const item =
+                    document.createElement("div");
+
+                item.className =
+                    "download-item";
+
+
+                const label =
+                    document.createElement("span");
+
+                label.textContent =
+                    `Sayfa ${pageNumber}`;
+
+
+                const link =
+                    document.createElement("a");
+
+                link.className =
+                    "download-link";
+
+                link.href = url;
+
+                link.download =
+                    `akifio-sayfa-${pageNumber}.pdf`;
+
+                link.textContent =
+                    "İndir";
+
+
+                item.appendChild(label);
+                item.appendChild(link);
+
+                downloadList.appendChild(item);
+            }
+
+
+            result.style.display =
+                "block";
+
+        } catch (error) {
+
+            console.error(error);
+
+            showError(
+                "PDF ayrılamadı. Lütfen dosyanın geçerli olduğundan emin ol."
+            );
+
+        } finally {
+
+            splitButton.disabled = false;
+
+            splitButton.textContent =
+                "PDF'yi Ayır";
+        }
+    });
+
+
+    function formatSize(bytes) {
+
+        if (bytes < 1024) {
+            return `${bytes} B`;
+        }
+
+        if (bytes < 1024 * 1024) {
+            return `${(bytes / 1024).toFixed(1)} KB`;
+        }
+
+        return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
+    }
+
+
+    window.addEventListener("beforeunload", () => {
+        clearDownloadUrls();
+    });
+</script>
+
+</body>
+</html>
