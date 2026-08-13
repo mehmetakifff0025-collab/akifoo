@@ -1,1 +1,668 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <title>PDF Birleştir - Akifio</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f7f8fc;
+            color: #111827;
+        }
+
+        .container {
+            width: min(900px, calc(100% - 32px));
+            margin: 50px auto;
+        }
+
+        .back {
+            display: inline-block;
+            margin-bottom: 24px;
+            color: #5b5cf0;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .back:hover {
+            text-decoration: underline;
+        }
+
+        .card {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 18px;
+            padding: 32px;
+            box-shadow: 0 10px 30px rgba(17, 24, 39, 0.06);
+        }
+
+        h1 {
+            margin: 0 0 10px;
+            font-size: 32px;
+        }
+
+        .description {
+            margin: 0 0 28px;
+            color: #6b7280;
+            line-height: 1.6;
+        }
+
+        .upload {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 180px;
+            padding: 25px;
+            border: 2px dashed #d1d5db;
+            border-radius: 14px;
+            cursor: pointer;
+            text-align: center;
+            transition: 0.2s;
+        }
+
+        .upload:hover {
+            border-color: #5b5cf0;
+            background: #f8f8ff;
+        }
+
+        .upload strong {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 17px;
+        }
+
+        .upload span {
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        .file-section {
+            display: none;
+            margin-top: 25px;
+        }
+
+        .file-title {
+            margin: 0 0 12px;
+            font-size: 17px;
+        }
+
+        .file-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+        }
+
+        .file-number {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: #5b5cf0;
+            color: #ffffff;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .file-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .file-name {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .file-size {
+            margin-top: 4px;
+            color: #6b7280;
+            font-size: 12px;
+        }
+
+        .remove {
+            padding: 7px 10px;
+            border: 0;
+            border-radius: 7px;
+            background: #fee2e2;
+            color: #b91c1c;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .remove:hover {
+            background: #fecaca;
+        }
+
+        .button {
+            width: 100%;
+            margin-top: 20px;
+            padding: 14px 20px;
+            border: 0;
+            border-radius: 10px;
+            background: #5b5cf0;
+            color: #ffffff;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .button:hover {
+            background: #494ad8;
+        }
+
+        .button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .clear-button {
+            margin-top: 10px;
+            background: #111827;
+        }
+
+        .clear-button:hover {
+            background: #1f2937;
+        }
+
+        .result {
+            display: none;
+            margin-top: 25px;
+            padding: 20px;
+            border-radius: 14px;
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+        }
+
+        .result p {
+            margin: 6px 0;
+            font-size: 14px;
+        }
+
+        .download {
+            display: block;
+            margin-top: 15px;
+            padding: 13px 20px;
+            border-radius: 10px;
+            background: #111827;
+            color: #ffffff;
+            text-align: center;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .download:hover {
+            background: #1f2937;
+        }
+
+        .error {
+            display: none;
+            margin-top: 20px;
+            padding: 12px 15px;
+            border-radius: 10px;
+            background: #fef2f2;
+            color: #b91c1c;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .info {
+            margin-top: 15px;
+            color: #6b7280;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                margin: 25px auto;
+            }
+
+            .card {
+                padding: 22px;
+            }
+
+            h1 {
+                font-size: 27px;
+            }
+
+            .file-size {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <a href="../index.html" class="back">
+        ← Akifio ana sayfa
+    </a>
+
+    <div class="card">
+
+        <h1>PDF Birleştir</h1>
+
+        <p class="description">
+            Birden fazla PDF dosyasını tek bir PDF dosyasında birleştir.
+            İşlem tarayıcında gerçekleşir.
+        </p>
+
+        <label class="upload" for="fileInput">
+            <div>
+                <strong>PDF dosyalarını seç</strong>
+                <span>
+                    Bir veya birden fazla PDF dosyası seçebilirsin
+                </span>
+            </div>
+        </label>
+
+        <input
+            id="fileInput"
+            type="file"
+            accept="application/pdf"
+            multiple
+        >
+
+        <div class="file-section" id="fileSection">
+
+            <h2 class="file-title">
+                Seçilen PDF'ler
+            </h2>
+
+            <div class="file-list" id="fileList"></div>
+
+            <button
+                type="button"
+                class="button"
+                id="mergeButton"
+            >
+                PDF'leri Birleştir
+            </button>
+
+            <button
+                type="button"
+                class="button clear-button"
+                id="clearButton"
+            >
+                Seçimleri Temizle
+            </button>
+
+            <p class="info">
+                PDF'ler yukarıdaki sırayla birleştirilecektir.
+            </p>
+
+        </div>
+
+        <div class="result" id="result">
+
+            <p>
+                <strong>PDF hazır.</strong>
+            </p>
+
+            <p id="pageInfo"></p>
+
+            <p>
+                <strong>Dosya boyutu:</strong>
+                <span id="resultSize"></span>
+            </p>
+
+            <a
+                id="downloadButton"
+                class="download"
+                download="akifio-birlestirilmis.pdf"
+            >
+                Birleştirilmiş PDF'yi İndir
+            </a>
+
+        </div>
+
+        <div class="error" id="error"></div>
+
+    </div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+
+<script>
+    const fileInput = document.getElementById("fileInput");
+    const fileSection = document.getElementById("fileSection");
+    const fileList = document.getElementById("fileList");
+    const mergeButton = document.getElementById("mergeButton");
+    const clearButton = document.getElementById("clearButton");
+    const result = document.getElementById("result");
+    const pageInfo = document.getElementById("pageInfo");
+    const resultSize = document.getElementById("resultSize");
+    const downloadButton = document.getElementById("downloadButton");
+    const errorBox = document.getElementById("error");
+
+    let selectedFiles = [];
+    let downloadUrl = null;
+
+
+    function showError(message) {
+        errorBox.textContent = message;
+        errorBox.style.display = "block";
+    }
+
+
+    function hideError() {
+        errorBox.textContent = "";
+        errorBox.style.display = "none";
+    }
+
+
+    function formatSize(bytes) {
+        if (bytes < 1024) {
+            return bytes + " B";
+        }
+
+        if (bytes < 1024 * 1024) {
+            return (bytes / 1024).toFixed(1) + " KB";
+        }
+
+        return (bytes / (1024 * 1024)).toFixed(2) + " MB";
+    }
+
+
+    function renderFiles() {
+
+        fileList.innerHTML = "";
+
+        selectedFiles.forEach((file, index) => {
+
+            const item = document.createElement("div");
+
+            item.className = "file-item";
+
+            item.innerHTML = `
+                <div class="file-number">
+                    ${index + 1}
+                </div>
+
+                <div class="file-info">
+                    <div class="file-name">
+                        ${escapeHtml(file.name)}
+                    </div>
+
+                    <div class="file-size">
+                        ${formatSize(file.size)}
+                    </div>
+                </div>
+
+                <button
+                    type="button"
+                    class="remove"
+                    data-index="${index}"
+                >
+                    Sil
+                </button>
+            `;
+
+            fileList.appendChild(item);
+        });
+
+
+        fileSection.style.display =
+            selectedFiles.length > 0
+                ? "block"
+                : "none";
+    }
+
+
+    function escapeHtml(text) {
+
+        const div =
+            document.createElement("div");
+
+        div.textContent = text;
+
+        return div.innerHTML;
+    }
+
+
+    fileInput.addEventListener("change", () => {
+
+        hideError();
+
+        const newFiles =
+            Array.from(fileInput.files);
+
+        if (newFiles.length === 0) {
+            return;
+        }
+
+
+        const invalidFile =
+            newFiles.find(
+                file => file.type !== "application/pdf"
+            );
+
+
+        if (invalidFile) {
+
+            showError(
+                "Lütfen yalnızca PDF dosyaları seç."
+            );
+
+            fileInput.value = "";
+
+            return;
+        }
+
+
+        selectedFiles.push(...newFiles);
+
+        renderFiles();
+
+        result.style.display = "none";
+
+        fileInput.value = "";
+    });
+
+
+    fileList.addEventListener("click", event => {
+
+        const button =
+            event.target.closest(".remove");
+
+        if (!button) {
+            return;
+        }
+
+        const index =
+            Number(button.dataset.index);
+
+        selectedFiles.splice(index, 1);
+
+        renderFiles();
+
+        result.style.display = "none";
+    });
+
+
+    clearButton.addEventListener("click", () => {
+
+        selectedFiles = [];
+
+        fileInput.value = "";
+
+        renderFiles();
+
+        result.style.display = "none";
+
+        hideError();
+    });
+
+
+    mergeButton.addEventListener("click", async () => {
+
+        hideError();
+
+        if (selectedFiles.length < 2) {
+
+            showError(
+                "Birleştirmek için en az 2 PDF seçmelisin."
+            );
+
+            return;
+        }
+
+
+        if (
+            !window.PDFLib ||
+            !window.PDFLib.PDFDocument
+        ) {
+
+            showError(
+                "PDF sistemi yüklenemedi. Sayfayı yenileyip tekrar dene."
+            );
+
+            return;
+        }
+
+
+        mergeButton.disabled = true;
+
+        mergeButton.textContent =
+            "PDF'ler birleştiriliyor...";
+
+
+        try {
+
+            const mergedPdf =
+                await PDFLib.PDFDocument.create();
+
+            let totalPages = 0;
+
+
+            for (
+                const file of selectedFiles
+            ) {
+
+                const fileBytes =
+                    await file.arrayBuffer();
+
+                const sourcePdf =
+                    await PDFLib.PDFDocument.load(
+                        fileBytes
+                    );
+
+                const pages =
+                    await mergedPdf.copyPages(
+                        sourcePdf,
+                        sourcePdf.getPageIndices()
+                    );
+
+
+                pages.forEach(page => {
+
+                    mergedPdf.addPage(page);
+
+                });
+
+
+                totalPages +=
+                    sourcePdf.getPageCount();
+            }
+
+
+            const mergedBytes =
+                await mergedPdf.save();
+
+
+            if (downloadUrl) {
+
+                URL.revokeObjectURL(
+                    downloadUrl
+                );
+            }
+
+
+            const blob =
+                new Blob(
+                    [mergedBytes],
+                    {
+                        type: "application/pdf"
+                    }
+                );
+
+
+            downloadUrl =
+                URL.createObjectURL(blob);
+
+
+            downloadButton.href =
+                downloadUrl;
+
+
+            pageInfo.textContent =
+                `${selectedFiles.length} PDF birleştirildi • ${totalPages} sayfa`;
+
+
+            resultSize.textContent =
+                formatSize(blob.size);
+
+
+            result.style.display =
+                "block";
+
+
+        } catch (error) {
+
+            console.error(error);
+
+            showError(
+                "PDF'ler birleştirilemedi. Dosyaların geçerli PDF olduğundan emin ol."
+            );
+
+        } finally {
+
+            mergeButton.disabled = false;
+
+            mergeButton.textContent =
+                "PDF'leri Birleştir";
+        }
+    });
+
+
+    window.addEventListener("beforeunload", () => {
+
+        if (downloadUrl) {
+            URL.revokeObjectURL(downloadUrl);
+        }
+
+    });
+</script>
+
+</body>
+</html>
