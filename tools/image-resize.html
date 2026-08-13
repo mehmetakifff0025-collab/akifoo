@@ -31,6 +31,10 @@
             font-size: 14px;
         }
 
+        .back:hover {
+            text-decoration: underline;
+        }
+
         .card {
             background: #ffffff;
             border: 1px solid #e5e7eb;
@@ -86,6 +90,10 @@
         .preview {
             display: none;
             margin-top: 25px;
+            padding: 20px;
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 14px;
         }
 
         .preview img {
@@ -96,57 +104,61 @@
             border-radius: 10px;
         }
 
-        .controls {
+        .dimensions {
             display: none;
-            margin-top: 30px;
+            margin-top: 25px;
         }
 
-        .control-group {
-            margin-bottom: 20px;
+        .dimensions-title {
+            margin: 0 0 18px;
+            font-size: 18px;
         }
 
-        .control-group label {
+        .input-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 18px;
+        }
+
+        .field label {
             display: block;
             margin-bottom: 8px;
+            font-size: 14px;
             font-weight: 600;
         }
 
-        .dimension-row {
-            display: flex;
-            gap: 15px;
-        }
-
-        .dimension-field {
-            flex: 1;
-        }
-
-        .dimension-field input,
-        .format-select {
+        .field input {
             width: 100%;
-            padding: 12px 14px;
+            padding: 13px 14px;
             border: 1px solid #d1d5db;
             border-radius: 10px;
-            font-size: 15px;
             outline: none;
+            font-size: 15px;
         }
 
-        .dimension-field input:focus,
-        .format-select:focus {
+        .field input:focus {
             border-color: #5b5cf0;
         }
 
-        .ratio-control {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-top: 12px;
-            color: #4b5563;
+        .original {
+            margin-bottom: 18px;
+            color: #6b7280;
             font-size: 14px;
         }
 
-        .ratio-control input {
+        .ratio {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 22px;
+            font-size: 14px;
+        }
+
+        .ratio input {
             width: 17px;
             height: 17px;
+            cursor: pointer;
         }
 
         .button {
@@ -155,7 +167,7 @@
             border: 0;
             border-radius: 10px;
             background: #5b5cf0;
-            color: white;
+            color: #ffffff;
             font-size: 15px;
             font-weight: 600;
             cursor: pointer;
@@ -189,10 +201,14 @@
             padding: 13px 20px;
             border-radius: 10px;
             background: #111827;
-            color: white;
+            color: #ffffff;
             text-align: center;
             text-decoration: none;
             font-weight: 600;
+        }
+
+        .download:hover {
+            background: #1f2937;
         }
 
         .error {
@@ -218,8 +234,8 @@
                 font-size: 27px;
             }
 
-            .dimension-row {
-                flex-direction: column;
+            .input-row {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -229,21 +245,23 @@
 
     <div class="container">
 
-        <a href="../index.html" class="back">← Akifio ana sayfa</a>
+        <a href="../index.html" class="back">
+            ← Akifio ana sayfa
+        </a>
 
         <div class="card">
 
             <h1>Görsel Boyutlandır</h1>
 
             <p class="description">
-                Görselinin genişliğini ve yüksekliğini değiştir.
+                Görselinin genişliğini ve yüksekliğini kolayca değiştir.
                 İşlem tarayıcında gerçekleşir.
             </p>
 
             <label class="upload" for="fileInput">
                 <div>
                     <strong>Görsel seç</strong>
-                    <span>JPG, PNG veya WebP dosyanı buraya yükle</span>
+                    <span>JPG, PNG veya WebP dosyanı yükle</span>
                 </div>
             </label>
 
@@ -254,68 +272,69 @@
             >
 
             <div class="preview" id="preview">
-                <img id="previewImage" alt="Görsel önizleme">
+                <img
+                    id="previewImage"
+                    alt="Görsel önizleme"
+                >
             </div>
 
-            <div class="controls" id="controls">
+            <div class="dimensions" id="dimensions">
 
-                <div class="control-group">
+                <h2 class="dimensions-title">
+                    Yeni boyut
+                </h2>
 
-                    <label>Boyut</label>
+                <div class="original">
+                    Orijinal boyut:
+                    <strong id="originalDimensions">
+                        -
+                    </strong>
+                </div>
 
-                    <div class="dimension-row">
+                <div class="input-row">
 
-                        <div class="dimension-field">
-                            <input
-                                id="widthInput"
-                                type="number"
-                                min="1"
-                                placeholder="Genişlik"
-                            >
-                        </div>
+                    <div class="field">
+                        <label for="width">
+                            Genişlik (px)
+                        </label>
 
-                        <div class="dimension-field">
-                            <input
-                                id="heightInput"
-                                type="number"
-                                min="1"
-                                placeholder="Yükseklik"
-                            >
-                        </div>
-
+                        <input
+                            id="width"
+                            type="number"
+                            min="1"
+                            step="1"
+                        >
                     </div>
 
-                    <label class="ratio-control">
+                    <div class="field">
+                        <label for="height">
+                            Yükseklik (px)
+                        </label>
+
                         <input
-                            id="ratioLock"
-                            type="checkbox"
-                            checked
+                            id="height"
+                            type="number"
+                            min="1"
+                            step="1"
                         >
-                        Oranı koru
-                    </label>
+                    </div>
 
                 </div>
 
-
-                <div class="control-group">
-
-                    <label for="formatSelect">
-                        Çıktı formatı
-                    </label>
-
-                    <select
-                        id="formatSelect"
-                        class="format-select"
+                <label class="ratio">
+                    <input
+                        id="keepRatio"
+                        type="checkbox"
+                        checked
                     >
-                        <option value="image/jpeg">JPG</option>
-                        <option value="image/png">PNG</option>
-                        <option value="image/webp">WebP</option>
-                    </select>
 
-                </div>
-
+                    <span>
+                        En-boy oranını koru
+                    </span>
+                </label>
 
                 <button
+                    type="button"
                     class="button"
                     id="resizeButton"
                 >
@@ -324,58 +343,68 @@
 
             </div>
 
-
             <div class="result" id="result">
 
                 <p>
                     <strong>Orijinal boyut:</strong>
-                    <span id="originalDimensions"></span>
+                    <span id="resultOriginal"></span>
                 </p>
 
                 <p>
                     <strong>Yeni boyut:</strong>
-                    <span id="newDimensions"></span>
+                    <span id="resultNew"></span>
                 </p>
 
                 <a
                     id="downloadButton"
                     class="download"
-                    download="akifio-boyutlandirilmis"
+                    download="akifio-boyutlandirilmis.jpg"
                 >
                     Boyutlandırılmış Görseli İndir
                 </a>
 
             </div>
 
-
-            <div class="error" id="error"></div>
+            <div
+                class="error"
+                id="error"
+            ></div>
 
         </div>
 
     </div>
 
-
     <script>
-
         const fileInput = document.getElementById("fileInput");
+
         const preview = document.getElementById("preview");
         const previewImage = document.getElementById("previewImage");
-        const controls = document.getElementById("controls");
 
-        const widthInput = document.getElementById("widthInput");
-        const heightInput = document.getElementById("heightInput");
+        const dimensions = document.getElementById("dimensions");
 
-        const ratioLock = document.getElementById("ratioLock");
-        const formatSelect = document.getElementById("formatSelect");
-
-        const resizeButton = document.getElementById("resizeButton");
-
-        const result = document.getElementById("result");
         const originalDimensions =
             document.getElementById("originalDimensions");
 
-        const newDimensions =
-            document.getElementById("newDimensions");
+        const widthInput =
+            document.getElementById("width");
+
+        const heightInput =
+            document.getElementById("height");
+
+        const keepRatio =
+            document.getElementById("keepRatio");
+
+        const resizeButton =
+            document.getElementById("resizeButton");
+
+        const result =
+            document.getElementById("result");
+
+        const resultOriginal =
+            document.getElementById("resultOriginal");
+
+        const resultNew =
+            document.getElementById("resultNew");
 
         const downloadButton =
             document.getElementById("downloadButton");
@@ -385,8 +414,11 @@
 
 
         let selectedFile = null;
-        let imageObject = null;
-        let aspectRatio = 1;
+
+        let originalWidth = 0;
+        let originalHeight = 0;
+
+        let previewUrl = null;
         let downloadUrl = null;
 
 
@@ -402,6 +434,14 @@
         }
 
 
+        function clearDownloadUrl() {
+            if (downloadUrl) {
+                URL.revokeObjectURL(downloadUrl);
+                downloadUrl = null;
+            }
+        }
+
+
         fileInput.addEventListener("change", () => {
 
             hideError();
@@ -412,84 +452,122 @@
                 return;
             }
 
+
             if (!file.type.startsWith("image/")) {
-                showError("Lütfen geçerli bir görsel dosyası seç.");
+
+                showError(
+                    "Lütfen geçerli bir JPG, PNG veya WebP dosyası seç."
+                );
+
+                fileInput.value = "";
                 return;
             }
 
+
             selectedFile = file;
 
-            const reader = new FileReader();
 
-            reader.onload = (event) => {
+            if (previewUrl) {
+                URL.revokeObjectURL(previewUrl);
+            }
 
-                const image = new Image();
 
-                image.onload = () => {
+            previewUrl = URL.createObjectURL(file);
 
-                    imageObject = image;
+            previewImage.src = previewUrl;
 
-                    aspectRatio =
-                        image.naturalWidth / image.naturalHeight;
 
-                    widthInput.value = image.naturalWidth;
-                    heightInput.value = image.naturalHeight;
+            previewImage.onload = () => {
 
-                    originalDimensions.textContent =
-                        `${image.naturalWidth} × ${image.naturalHeight} px`;
+                originalWidth = previewImage.naturalWidth;
+                originalHeight = previewImage.naturalHeight;
 
-                    previewImage.src = event.target.result;
 
-                    preview.style.display = "block";
-                    controls.style.display = "block";
-                    result.style.display = "none";
-                };
+                originalDimensions.textContent =
+                    `${originalWidth} × ${originalHeight} px`;
 
-                image.onerror = () => {
-                    showError("Görsel okunamadı.");
-                };
 
-                image.src = event.target.result;
+                widthInput.value = originalWidth;
+                heightInput.value = originalHeight;
+
+
+                preview.style.display = "block";
+                dimensions.style.display = "block";
+
+                result.style.display = "none";
+
+                clearDownloadUrl();
             };
 
-            reader.onerror = () => {
-                showError("Görsel yüklenemedi.");
-            };
 
-            reader.readAsDataURL(file);
+            previewImage.onerror = () => {
+
+                showError(
+                    "Görsel okunamadı. Lütfen başka bir dosya dene."
+                );
+
+                preview.style.display = "none";
+                dimensions.style.display = "none";
+            };
 
         });
 
 
         widthInput.addEventListener("input", () => {
 
-            if (!ratioLock.checked || !aspectRatio) {
+            if (!keepRatio.checked) {
                 return;
             }
 
-            const width = Number(widthInput.value);
-
-            if (width > 0) {
-                heightInput.value =
-                    Math.round(width / aspectRatio);
+            if (
+                originalWidth <= 0 ||
+                originalHeight <= 0
+            ) {
+                return;
             }
 
+            const newWidth = Number(widthInput.value);
+
+            if (!Number.isFinite(newWidth) || newWidth <= 0) {
+                return;
+            }
+
+            const ratio =
+                originalHeight / originalWidth;
+
+            const newHeight =
+                Math.round(newWidth * ratio);
+
+            heightInput.value = newHeight;
         });
 
 
         heightInput.addEventListener("input", () => {
 
-            if (!ratioLock.checked || !aspectRatio) {
+            if (!keepRatio.checked) {
                 return;
             }
 
-            const height = Number(heightInput.value);
-
-            if (height > 0) {
-                widthInput.value =
-                    Math.round(height * aspectRatio);
+            if (
+                originalWidth <= 0 ||
+                originalHeight <= 0
+            ) {
+                return;
             }
 
+            const newHeight = Number(heightInput.value);
+
+            if (!Number.isFinite(newHeight) || newHeight <= 0) {
+                return;
+            }
+
+            const ratio =
+                originalWidth / originalHeight;
+
+            const newWidth =
+                Math.round(newHeight * ratio);
+
+            widthInput.value = newWidth;
         });
 
 
@@ -497,109 +575,167 @@
 
             hideError();
 
-            if (!selectedFile || !imageObject) {
+            if (!selectedFile) {
                 showError("Önce bir görsel seç.");
                 return;
             }
 
-            const width = Number(widthInput.value);
-            const height = Number(heightInput.value);
+
+            const newWidth = Number(widthInput.value);
+            const newHeight = Number(heightInput.value);
+
 
             if (
-                !Number.isFinite(width) ||
-                !Number.isFinite(height) ||
-                width < 1 ||
-                height < 1
+                !Number.isInteger(newWidth) ||
+                !Number.isInteger(newHeight) ||
+                newWidth <= 0 ||
+                newHeight <= 0
             ) {
-                showError("Geçerli bir genişlik ve yükseklik gir.");
+                showError(
+                    "Genişlik ve yükseklik 1 veya daha büyük tam sayı olmalıdır."
+                );
+
                 return;
             }
+
+
+            if (
+                newWidth > 10000 ||
+                newHeight > 10000
+            ) {
+                showError(
+                    "Genişlik ve yükseklik 10000 pikselden büyük olamaz."
+                );
+
+                return;
+            }
+
 
             resizeButton.disabled = true;
             resizeButton.textContent = "Boyutlandırılıyor...";
 
 
-            const canvas = document.createElement("canvas");
-
-            canvas.width = width;
-            canvas.height = height;
+            const image = new Image();
 
 
-            const context = canvas.getContext("2d");
+            image.onload = () => {
 
-            if (!context) {
-                resizeButton.disabled = false;
-                resizeButton.textContent =
-                    "Görseli Boyutlandır";
+                try {
 
-                showError("Tarayıcı canvas desteği bulunamadı.");
-                return;
-            }
+                    const canvas =
+                        document.createElement("canvas");
 
-
-            context.drawImage(
-                imageObject,
-                0,
-                0,
-                width,
-                height
-            );
+                    canvas.width = newWidth;
+                    canvas.height = newHeight;
 
 
-            const format = formatSelect.value;
-
-            const extension =
-                format === "image/png"
-                    ? "png"
-                    : format === "image/webp"
-                        ? "webp"
-                        : "jpg";
+                    const context =
+                        canvas.getContext("2d");
 
 
-            canvas.toBlob(
-                (blob) => {
+                    if (!context) {
+                        throw new Error(
+                            "Canvas desteklenmiyor."
+                        );
+                    }
+
+
+                    context.drawImage(
+                        image,
+                        0,
+                        0,
+                        newWidth,
+                        newHeight
+                    );
+
+
+                    canvas.toBlob(
+                        (blob) => {
+
+                            resizeButton.disabled = false;
+                            resizeButton.textContent =
+                                "Görseli Boyutlandır";
+
+
+                            if (!blob) {
+
+                                showError(
+                                    "Görsel oluşturulamadı."
+                                );
+
+                                return;
+                            }
+
+
+                            clearDownloadUrl();
+
+                            downloadUrl =
+                                URL.createObjectURL(blob);
+
+
+                            resultOriginal.textContent =
+                                `${originalWidth} × ${originalHeight} px`;
+
+
+                            resultNew.textContent =
+                                `${newWidth} × ${newHeight} px`;
+
+
+                            downloadButton.href =
+                                downloadUrl;
+
+
+                            result.style.display =
+                                "block";
+
+                        },
+                        "image/jpeg",
+                        0.92
+                    );
+
+                } catch (error) {
 
                     resizeButton.disabled = false;
                     resizeButton.textContent =
                         "Görseli Boyutlandır";
 
-                    if (!blob) {
-                        showError(
-                            "Görsel boyutlandırılamadı."
-                        );
-                        return;
-                    }
+                    showError(
+                        "Görsel boyutlandırılırken bir hata oluştu."
+                    );
+                }
+
+            };
 
 
-                    if (downloadUrl) {
-                        URL.revokeObjectURL(downloadUrl);
-                    }
+            image.onerror = () => {
+
+                resizeButton.disabled = false;
+                resizeButton.textContent =
+                    "Görseli Boyutlandır";
+
+                showError(
+                    "Görsel yüklenemedi."
+                );
+            };
 
 
-                    downloadUrl =
-                        URL.createObjectURL(blob);
-
-
-                    newDimensions.textContent =
-                        `${width} × ${height} px`;
-
-
-                    downloadButton.href =
-                        downloadUrl;
-
-                    downloadButton.download =
-                        `akifio-boyutlandirilmis.${extension}`;
-
-
-                    result.style.display = "block";
-
-                },
-                format,
-                0.92
-            );
+            image.src =
+                URL.createObjectURL(selectedFile);
 
         });
 
+
+        window.addEventListener("beforeunload", () => {
+
+            if (previewUrl) {
+                URL.revokeObjectURL(previewUrl);
+            }
+
+            if (downloadUrl) {
+                URL.revokeObjectURL(downloadUrl);
+            }
+
+        });
     </script>
 
 </body>
