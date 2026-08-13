@@ -342,7 +342,38 @@ body {
     .hero h1 {
         font-size: 34px;
     }
+/* MOBİL TÜRK BAYRAĞI */
+@media (max-width: 700px) {
 
+    .topbar {
+        position: relative;
+        min-height: 90px;
+        padding: 14px 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .topbar .search {
+        width: 100%;
+        max-width: 100%;
+        margin-right: 0;
+    }
+
+    .turkey-flag-image {
+        display: block !important;
+        position: absolute;
+        right: 18px;
+        top: 14px;
+
+        width: 55px;
+        height: 36px;
+
+        object-fit: cover;
+        border-radius: 4px;
+        z-index: 10;
+    }
+}
     .tools-grid {
         grid-template-columns: 1fr;
     }
