@@ -1,4 +1,4 @@
-{`<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
@@ -7,7 +7,9 @@
     <title>JPG → PDF - Akifio</title>
 
     <style>
-        * { box-sizing: border-box; }
+        * {
+            box-sizing: border-box;
+        }
 
         body {
             margin: 0;
@@ -29,12 +31,16 @@
             font-size: 14px;
         }
 
+        .back:hover {
+            text-decoration: underline;
+        }
+
         .card {
-            background: #fff;
+            background: #ffffff;
             border: 1px solid #e5e7eb;
             border-radius: 18px;
             padding: 32px;
-            box-shadow: 0 10px 30px rgba(17,24,39,.06);
+            box-shadow: 0 10px 30px rgba(17, 24, 39, 0.06);
         }
 
         h1 {
@@ -43,8 +49,8 @@
         }
 
         .description {
+            margin: 0 0 28px;
             color: #6b7280;
-            margin-bottom: 28px;
             line-height: 1.6;
         }
 
@@ -53,11 +59,12 @@
             align-items: center;
             justify-content: center;
             min-height: 180px;
+            padding: 25px;
             border: 2px dashed #d1d5db;
             border-radius: 14px;
             cursor: pointer;
             text-align: center;
-            padding: 25px;
+            transition: 0.2s;
         }
 
         .upload:hover {
@@ -76,40 +83,159 @@
             font-size: 14px;
         }
 
-        #fileInput { display: none; }
+        #fileInput {
+            display: none;
+        }
+
+        .files {
+            display: none;
+            margin-top: 25px;
+        }
+
+        .files-title {
+            margin: 0 0 12px;
+            font-size: 17px;
+        }
 
         .file-list {
-            display: none;
-            margin-top: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
 
         .file-item {
-            padding: 10px 12px;
-            background: #f3f4f6;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+        }
+
+        .file-number {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 30px;
+            height: 30px;
             border-radius: 8px;
-            margin-bottom: 8px;
+            background: #5b5cf0;
+            color: #ffffff;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .file-name {
+            flex: 1;
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
             font-size: 14px;
         }
 
-        .button {
+        .file-size {
+            color: #6b7280;
+            font-size: 13px;
+            white-space: nowrap;
+        }
+
+        .settings {
             display: none;
+            margin-top: 25px;
+            padding: 20px;
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 14px;
+        }
+
+        .settings-title {
+            margin: 0 0 16px;
+            font-size: 17px;
+        }
+
+        .setting-row {
+            margin-bottom: 16px;
+        }
+
+        .setting-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .setting-row label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        select {
             width: 100%;
-            margin-top: 24px;
-            padding: 14px;
+            padding: 12px 14px;
+            border: 1px solid #d1d5db;
+            border-radius: 10px;
+            background: #ffffff;
+            color: #111827;
+            font-size: 14px;
+            cursor: pointer;
+            outline: none;
+        }
+
+        select:focus {
+            border-color: #5b5cf0;
+        }
+
+        .button {
+            width: 100%;
+            margin-top: 20px;
+            padding: 14px 20px;
             border: 0;
             border-radius: 10px;
             background: #5b5cf0;
-            color: white;
+            color: #ffffff;
             font-size: 15px;
             font-weight: 600;
             cursor: pointer;
         }
 
-        .button:hover { background: #494ad8; }
+        .button:hover {
+            background: #494ad8;
+        }
 
         .button:disabled {
-            opacity: .5;
+            opacity: 0.5;
             cursor: not-allowed;
+        }
+
+        .result {
+            display: none;
+            margin-top: 25px;
+            padding: 20px;
+            border-radius: 14px;
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+        }
+
+        .result p {
+            margin: 6px 0;
+            font-size: 14px;
+        }
+
+        .download {
+            display: block;
+            margin-top: 15px;
+            padding: 13px 20px;
+            border-radius: 10px;
+            background: #111827;
+            color: #ffffff;
+            text-align: center;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .download:hover {
+            background: #1f2937;
         }
 
         .error {
@@ -120,210 +246,794 @@
             background: #fef2f2;
             color: #b91c1c;
             font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .info {
+            margin-top: 15px;
+            color: #6b7280;
+            font-size: 13px;
+            line-height: 1.5;
         }
 
         @media (max-width: 600px) {
-            .container { margin: 25px auto; }
-            .card { padding: 22px; }
-            h1 { font-size: 27px; }
+            .container {
+                margin: 25px auto;
+            }
+
+            .card {
+                padding: 22px;
+            }
+
+            h1 {
+                font-size: 27px;
+            }
+
+            .file-size {
+                display: none;
+            }
         }
     </style>
 </head>
 
 <body>
 
-<div class="container">
+    <div class="container">
 
-    <a href="../index.html" class="back">← Akifio ana sayfa</a>
+        <a href="../index.html" class="back">
+            ← Akifio ana sayfa
+        </a>
 
-    <div class="card">
+        <div class="card">
 
-        <h1>JPG → PDF</h1>
+            <h1>JPG → PDF</h1>
 
-        <p class="description">
-            Bir veya birden fazla JPG görselini tek bir PDF dosyasına dönüştür.
-            İşlem doğrudan tarayıcında gerçekleşir.
-        </p>
+            <p class="description">
+                JPG, PNG veya WebP görsellerini tek bir PDF dosyasında birleştir.
+                İşlem tarayıcında gerçekleşir.
+            </p>
 
-        <label class="upload" for="fileInput">
-            <div>
-                <strong>JPG görsellerini seç</strong>
-                <span>Birden fazla görsel seçebilirsin</span>
+            <label class="upload" for="fileInput">
+                <div>
+                    <strong>Görselleri seç</strong>
+                    <span>
+                        Bir veya birden fazla JPG, PNG veya WebP dosyası seç
+                    </span>
+                </div>
+            </label>
+
+            <input
+                id="fileInput"
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+                multiple
+            >
+
+            <div class="files" id="files">
+
+                <h2 class="files-title">
+                    Seçilen görseller
+                </h2>
+
+                <div
+                    class="file-list"
+                    id="fileList"
+                ></div>
+
             </div>
-        </label>
 
-        <input
-            id="fileInput"
-            type="file"
-            accept="image/jpeg"
-            multiple
-        >
+            <div class="settings" id="settings">
 
-        <div id="fileList" class="file-list"></div>
+                <h2 class="settings-title">
+                    PDF Ayarları
+                </h2>
 
-        <button id="convertButton" class="button">
-            PDF Oluştur
-        </button>
+                <div class="setting-row">
 
-        <div id="error" class="error"></div>
+                    <label for="pageSize">
+                        Sayfa boyutu
+                    </label>
+
+                    <select id="pageSize">
+
+                        <option value="a4">
+                            A4
+                        </option>
+
+                        <option value="a5">
+                            A5
+                        </option>
+
+                        <option value="letter">
+                            Letter
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <div class="setting-row">
+
+                    <label for="orientation">
+                        Sayfa yönü
+                    </label>
+
+                    <select id="orientation">
+
+                        <option value="auto">
+                            Otomatik
+                        </option>
+
+                        <option value="portrait">
+                            Dikey
+                        </option>
+
+                        <option value="landscape">
+                            Yatay
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <button
+                    type="button"
+                    class="button"
+                    id="convertButton"
+                >
+                    PDF Oluştur
+                </button>
+
+                <p class="info">
+                    Her görsel PDF içerisinde ayrı bir sayfa olarak oluşturulur.
+                </p>
+
+            </div>
+
+            <div
+                class="result"
+                id="result"
+            >
+
+                <p>
+                    <strong>PDF hazır.</strong>
+                </p>
+
+                <p>
+                    <span id="pageCount"></span>
+                </p>
+
+                <p>
+                    <strong>Dosya boyutu:</strong>
+                    <span id="pdfSize"></span>
+                </p>
+
+                <a
+                    id="downloadButton"
+                    class="download"
+                    download="akifio-jpg-to-pdf.pdf"
+                >
+                    PDF'yi İndir
+                </a>
+
+            </div>
+
+            <div
+                class="error"
+                id="error"
+            ></div>
+
+        </div>
 
     </div>
 
-</div>
+    <!-- PDF oluşturma kütüphanesi -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
-<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+    <script>
+        const fileInput =
+            document.getElementById("fileInput");
 
-<script>
+        const filesContainer =
+            document.getElementById("files");
 
-const fileInput = document.getElementById("fileInput");
-const fileList = document.getElementById("fileList");
-const convertButton = document.getElementById("convertButton");
-const errorBox = document.getElementById("error");
+        const fileList =
+            document.getElementById("fileList");
 
-let selectedFiles = [];
+        const settings =
+            document.getElementById("settings");
 
-function showError(message) {
-    errorBox.textContent = message;
-    errorBox.style.display = "block";
-}
+        const pageSize =
+            document.getElementById("pageSize");
 
-function hideError() {
-    errorBox.textContent = "";
-    errorBox.style.display = "none";
-}
+        const orientation =
+            document.getElementById("orientation");
 
-fileInput.addEventListener("change", () => {
+        const convertButton =
+            document.getElementById("convertButton");
 
-    hideError();
+        const result =
+            document.getElementById("result");
 
-    selectedFiles = Array.from(fileInput.files);
+        const pageCount =
+            document.getElementById("pageCount");
 
-    if (!selectedFiles.length) return;
+        const pdfSize =
+            document.getElementById("pdfSize");
 
-    const invalid = selectedFiles.some(file => file.type !== "image/jpeg");
+        const downloadButton =
+            document.getElementById("downloadButton");
 
-    if (invalid) {
-        showError("Sadece JPG/JPEG dosyaları seç.");
-        selectedFiles = [];
-        return;
-    }
+        const errorBox =
+            document.getElementById("error");
 
-    fileList.innerHTML = "";
 
-    selectedFiles.forEach((file, index) => {
+        let selectedFiles = [];
+        let downloadUrl = null;
 
-        const item = document.createElement("div");
 
-        item.className = "file-item";
+        function showError(message) {
 
-        item.textContent = `${index + 1}. ${file.name}`;
+            errorBox.textContent = message;
+            errorBox.style.display = "block";
 
-        fileList.appendChild(item);
+        }
 
-    });
 
-    fileList.style.display = "block";
-    convertButton.style.display = "block";
+        function hideError() {
 
-});
+            errorBox.textContent = "";
+            errorBox.style.display = "none";
 
-function readImage(file) {
+        }
 
-    return new Promise((resolve, reject) => {
 
-        const reader = new FileReader();
+        function formatSize(bytes) {
 
-        reader.onload = () => {
-
-            const image = new Image();
-
-            image.onload = () => resolve(image);
-
-            image.onerror = reject;
-
-            image.src = reader.result;
-
-        };
-
-        reader.onerror = reject;
-
-        reader.readAsDataURL(file);
-
-    });
-
-}
-
-convertButton.addEventListener("click", async () => {
-
-    hideError();
-
-    if (!selectedFiles.length) {
-        showError("Önce JPG görsellerini seç.");
-        return;
-    }
-
-    convertButton.disabled = true;
-    convertButton.textContent = "PDF oluşturuluyor...";
-
-    try {
-
-        const { jsPDF } = window.jspdf;
-
-        const pdf = new jsPDF({
-            orientation: "portrait",
-            unit: "mm",
-            format: "a4"
-        });
-
-        for (let i = 0; i < selectedFiles.length; i++) {
-
-            const image = await readImage(selectedFiles[i]);
-
-            if (i > 0) {
-                pdf.addPage();
+            if (bytes < 1024) {
+                return bytes + " B";
             }
 
-            const pageWidth = 210;
-            const pageHeight = 297;
+            if (bytes < 1024 * 1024) {
+                return (bytes / 1024).toFixed(1) + " KB";
+            }
 
-            const ratio = Math.min(
-                pageWidth / image.width,
-                pageHeight / image.height
-            );
+            return (bytes / (1024 * 1024)).toFixed(2) + " MB";
 
-            const width = image.width * ratio;
-            const height = image.height * ratio;
+        }
 
-            const x = (pageWidth - width) / 2;
-            const y = (pageHeight - height) / 2;
 
-            pdf.addImage(
-                image,
-                "JPEG",
-                x,
-                y,
+        function getPageDimensions(size, direction) {
+
+            const sizes = {
+                a4: {
+                    width: 210,
+                    height: 297
+                },
+
+                a5: {
+                    width: 148,
+                    height: 210
+                },
+
+                letter: {
+                    width: 215.9,
+                    height: 279.4
+                }
+            };
+
+
+            const selected =
+                sizes[size] || sizes.a4;
+
+
+            let width =
+                selected.width;
+
+            let height =
+                selected.height;
+
+
+            if (direction === "landscape") {
+
+                [width, height] =
+                    [height, width];
+
+            }
+
+
+            return {
                 width,
                 height
+            };
+
+        }
+
+
+        function loadImage(file) {
+
+            return new Promise(
+                (resolve, reject) => {
+
+                    const image =
+                        new Image();
+
+                    const url =
+                        URL.createObjectURL(file);
+
+
+                    image.onload = () => {
+
+                        URL.revokeObjectURL(url);
+
+                        resolve(image);
+
+                    };
+
+
+                    image.onerror = () => {
+
+                        URL.revokeObjectURL(url);
+
+                        reject(
+                            new Error(
+                                "Görsel okunamadı."
+                            )
+                        );
+
+                    };
+
+
+                    image.src = url;
+
+                }
             );
 
         }
 
-        pdf.save("akifio-jpg-to-pdf.pdf");
 
-    } catch (error) {
+        function getImageOrientation(image) {
 
-        showError("PDF oluşturulurken bir hata oluştu.");
+            return image.naturalWidth >= image.naturalHeight
+                ? "landscape"
+                : "portrait";
 
-    } finally {
+        }
 
-        convertButton.disabled = false;
-        convertButton.textContent = "PDF Oluştur";
 
-    }
+        function addImageToPdf(
+            pdf,
+            image,
+            dimensions,
+            selectedOrientation
+        ) {
 
-});
+            const pageWidth =
+                dimensions.width;
 
-</script>
+            const pageHeight =
+                dimensions.height;
+
+
+            const imageWidth =
+                image.naturalWidth;
+
+            const imageHeight =
+                image.naturalHeight;
+
+
+            let contentWidth =
+                pageWidth - 20;
+
+            let contentHeight =
+                pageHeight - 20;
+
+
+            const imageRatio =
+                imageWidth / imageHeight;
+
+            const pageRatio =
+                contentWidth / contentHeight;
+
+
+            let drawWidth;
+            let drawHeight;
+
+
+            if (imageRatio > pageRatio) {
+
+                drawWidth =
+                    contentWidth;
+
+                drawHeight =
+                    drawWidth / imageRatio;
+
+            } else {
+
+                drawHeight =
+                    contentHeight;
+
+                drawWidth =
+                    drawHeight * imageRatio;
+
+            }
+
+
+            const x =
+                (pageWidth - drawWidth) / 2;
+
+            const y =
+                (pageHeight - drawHeight) / 2;
+
+
+            const canvas =
+                document.createElement("canvas");
+
+
+            canvas.width =
+                image.naturalWidth;
+
+            canvas.height =
+                image.naturalHeight;
+
+
+            const context =
+                canvas.getContext("2d");
+
+
+            context.fillStyle =
+                "#ffffff";
+
+            context.fillRect(
+                0,
+                0,
+                canvas.width,
+                canvas.height
+            );
+
+
+            context.drawImage(
+                image,
+                0,
+                0,
+                canvas.width,
+                canvas.height
+            );
+
+
+            const imageData =
+                canvas.toDataURL(
+                    "image/jpeg",
+                    0.92
+                );
+
+
+            pdf.addImage(
+                imageData,
+                "JPEG",
+                x,
+                y,
+                drawWidth,
+                drawHeight,
+                undefined,
+                "FAST"
+            );
+
+        }
+
+
+        fileInput.addEventListener(
+            "change",
+            () => {
+
+                hideError();
+
+                selectedFiles =
+                    Array.from(
+                        fileInput.files
+                    );
+
+
+                if (
+                    selectedFiles.length === 0
+                ) {
+
+                    filesContainer.style.display =
+                        "none";
+
+                    settings.style.display =
+                        "none";
+
+                    result.style.display =
+                        "none";
+
+                    return;
+                }
+
+
+                const invalidFile =
+                    selectedFiles.find(
+                        file =>
+                            ![
+                                "image/jpeg",
+                                "image/png",
+                                "image/webp"
+                            ].includes(file.type)
+                    );
+
+
+                if (invalidFile) {
+
+                    showError(
+                        "Lütfen yalnızca JPG, PNG veya WebP dosyaları seç."
+                    );
+
+                    fileInput.value = "";
+                    selectedFiles = [];
+
+                    filesContainer.style.display =
+                        "none";
+
+                    settings.style.display =
+                        "none";
+
+                    return;
+                }
+
+
+                fileList.innerHTML = "";
+
+
+                selectedFiles.forEach(
+                    (file, index) => {
+
+                        const item =
+                            document.createElement("div");
+
+                        item.className =
+                            "file-item";
+
+
+                        item.innerHTML = `
+                            <div class="file-number">
+                                ${index + 1}
+                            </div>
+
+                            <div class="file-name">
+                                ${file.name}
+                            </div>
+
+                            <div class="file-size">
+                                ${formatSize(file.size)}
+                            </div>
+                        `;
+
+
+                        fileList.appendChild(item);
+
+                    }
+                );
+
+
+                filesContainer.style.display =
+                    "block";
+
+                settings.style.display =
+                    "block";
+
+                result.style.display =
+                    "none";
+
+            }
+        );
+
+
+        orientation.addEventListener(
+            "change",
+            () => {
+
+                /*
+                 * Otomatik yön seçimi her sayfa için
+                 * görselin yönünü kullanır.
+                 */
+
+            }
+        );
+
+
+        convertButton.addEventListener(
+            "click",
+            async () => {
+
+                hideError();
+
+
+                if (
+                    selectedFiles.length === 0
+                ) {
+
+                    showError(
+                        "Önce en az bir görsel seç."
+                    );
+
+                    return;
+                }
+
+
+                if (
+                    !window.jspdf ||
+                    !window.jspdf.jsPDF
+                ) {
+
+                    showError(
+                        "PDF oluşturma sistemi yüklenemedi. Sayfayı yenileyip tekrar dene."
+                    );
+
+                    return;
+                }
+
+
+                convertButton.disabled =
+                    true;
+
+                convertButton.textContent =
+                    "PDF oluşturuluyor...";
+
+
+                try {
+
+                    let pdf = null;
+
+
+                    for (
+                        let i = 0;
+                        i < selectedFiles.length;
+                        i++
+                    ) {
+
+                        const file =
+                            selectedFiles[i];
+
+
+                        const image =
+                            await loadImage(file);
+
+
+                        let selectedDirection =
+                            orientation.value;
+
+
+                        if (
+                            selectedDirection ===
+                            "auto"
+                        ) {
+
+                            selectedDirection =
+                                getImageOrientation(
+                                    image
+                                );
+
+                        }
+
+
+                        const dimensions =
+                            getPageDimensions(
+                                pageSize.value,
+                                selectedDirection
+                            );
+
+
+                        if (!pdf) {
+
+                            pdf =
+                                new window.jspdf.jsPDF({
+                                    orientation:
+                                        selectedDirection,
+                                    unit: "mm",
+                                    format: [
+                                        dimensions.width,
+                                        dimensions.height
+                                    ],
+                                    compress: true
+                                });
+
+                        } else {
+
+                            pdf.addPage(
+                                [
+                                    dimensions.width,
+                                    dimensions.height
+                                ],
+                                selectedDirection
+                            );
+
+                        }
+
+
+                        addImageToPdf(
+                            pdf,
+                            image,
+                            dimensions,
+                            selectedDirection
+                        );
+
+                    }
+
+
+                    const blob =
+                        pdf.output("blob");
+
+
+                    if (downloadUrl) {
+
+                        URL.revokeObjectURL(
+                            downloadUrl
+                        );
+
+                    }
+
+
+                    downloadUrl =
+                        URL.createObjectURL(
+                            blob
+                        );
+
+
+                    downloadButton.href =
+                        downloadUrl;
+
+
+                    pageCount.textContent =
+                        `${selectedFiles.length} sayfa oluşturuldu.`;
+
+
+                    pdfSize.textContent =
+                        formatSize(
+                            blob.size
+                        );
+
+
+                    result.style.display =
+                        "block";
+
+
+                } catch (error) {
+
+                    console.error(error);
+
+                    showError(
+                        "PDF oluşturulurken bir hata oluştu. Farklı bir görsel ile tekrar dene."
+                    );
+
+                } finally {
+
+                    convertButton.disabled =
+                        false;
+
+                    convertButton.textContent =
+                        "PDF Oluştur";
+
+                }
+
+            }
+        );
+
+
+        window.addEventListener(
+            "beforeunload",
+            () => {
+
+                if (downloadUrl) {
+
+                    URL.revokeObjectURL(
+                        downloadUrl
+                    );
+
+                }
+
+            }
+        );
+    </script>
 
 </body>
-</html>`}
+</html>
