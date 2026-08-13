@@ -92,7 +92,7 @@ const AKIFIO_TOOLS = [
         category: "PDF Araçları",
         icon: "▤",
         url: "tools/pdf-split.html",
-        active: false
+        active: true
     },
 
     {
