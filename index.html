@@ -7,6 +7,153 @@
     <title>Akifio - Dijital Araçlar</title>
 
     <link rel="stylesheet" href="css/style.css">
+
+    <style>
+        /* TÜRKİYE BANNER */
+        .turkey-banner {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 18px;
+            flex: 1;
+            height: 100%;
+            overflow: hidden;
+            padding: 0 25px;
+        }
+
+        /* DALGALANAN BAYRAK */
+        .turkey-flag {
+            position: relative;
+            width: 76px;
+            height: 50px;
+            background: #e30a17;
+            border-radius: 4px;
+            box-shadow: 0 7px 20px rgba(227, 10, 23, 0.18);
+            transform-origin: left center;
+            animation: flagWave 3.8s ease-in-out infinite;
+        }
+
+        /* HAFİF DALGA GÖLGESİ */
+        .turkey-flag::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: 4px;
+            background: linear-gradient(
+                90deg,
+                rgba(255,255,255,0.08),
+                transparent 35%,
+                rgba(0,0,0,0.08)
+            );
+            pointer-events: none;
+        }
+
+        /* HİLAL */
+        .flag-crescent {
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: #fff;
+            left: 18px;
+            top: 12px;
+        }
+
+        .flag-crescent::after {
+            content: "";
+            position: absolute;
+            width: 21px;
+            height: 21px;
+            border-radius: 50%;
+            background: #e30a17;
+            left: 7px;
+            top: -2px;
+        }
+
+        /* YILDIZ */
+        .flag-star {
+            position: absolute;
+            color: #fff;
+            font-size: 16px;
+            left: 45px;
+            top: 17px;
+            z-index: 2;
+            transform: rotate(-10deg);
+        }
+
+        /* YAZI */
+        .turkey-text {
+            color: #6b7280;
+            font-size: 15px;
+            font-weight: 500;
+            letter-spacing: 0.2px;
+            white-space: nowrap;
+        }
+
+        .turkey-text strong {
+            color: #111827;
+            font-weight: 700;
+        }
+
+        /* BAYRAK ANİMASYONU */
+        @keyframes flagWave {
+            0%, 100% {
+                transform:
+                    perspective(500px)
+                    rotateY(0deg)
+                    skewY(0deg);
+            }
+
+            25% {
+                transform:
+                    perspective(500px)
+                    rotateY(-7deg)
+                    skewY(1deg);
+            }
+
+            50% {
+                transform:
+                    perspective(500px)
+                    rotateY(5deg)
+                    skewY(-1deg);
+            }
+
+            75% {
+                transform:
+                    perspective(500px)
+                    rotateY(-4deg)
+                    skewY(0.5deg);
+            }
+        }
+
+        /* MOBİL */
+        @media (max-width: 700px) {
+
+            .turkey-banner {
+                gap: 10px;
+                padding: 0 10px;
+            }
+
+            .turkey-flag {
+                width: 58px;
+                height: 38px;
+            }
+
+            .turkey-text {
+                font-size: 12px;
+            }
+
+            .flag-crescent {
+                transform: scale(0.75);
+                transform-origin: left top;
+            }
+
+            .flag-star {
+                transform: scale(0.75) rotate(-10deg);
+                transform-origin: left top;
+            }
+        }
+    </style>
 </head>
 
 <body>
@@ -44,6 +191,20 @@
                 placeholder="Araç ara..."
                 autocomplete="off"
             >
+
+            <!-- TÜRKİYE ALANI -->
+            <div class="turkey-banner">
+
+                <div class="turkey-flag">
+                    <div class="flag-crescent"></div>
+                    <div class="flag-star">★</div>
+                </div>
+
+                <div class="turkey-text">
+                    Rengi belli, <strong>adresi belli.</strong>
+                </div>
+
+            </div>
 
         </header>
 
