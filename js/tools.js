@@ -74,7 +74,7 @@ const AKIFIO_TOOLS = [
         category: "PDF Araçları",
         icon: "▤",
         url: "tools/jpg-to-pdf.html",
-        active: false
+        active: true
     },
 
     {
