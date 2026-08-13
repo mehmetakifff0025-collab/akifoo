@@ -1,1 +1,730 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <title>Görsel Dönüştür - Akifio</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f7f8fc;
+            color: #111827;
+        }
+
+        .container {
+            width: min(900px, calc(100% - 32px));
+            margin: 50px auto;
+        }
+
+        .back {
+            display: inline-block;
+            margin-bottom: 24px;
+            color: #5b5cf0;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .back:hover {
+            text-decoration: underline;
+        }
+
+        .card {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 18px;
+            padding: 32px;
+            box-shadow: 0 10px 30px rgba(17, 24, 39, 0.06);
+        }
+
+        h1 {
+            margin: 0 0 10px;
+            font-size: 32px;
+        }
+
+        .description {
+            margin: 0 0 28px;
+            color: #6b7280;
+            line-height: 1.6;
+        }
+
+        .upload {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 180px;
+            padding: 25px;
+            border: 2px dashed #d1d5db;
+            border-radius: 14px;
+            cursor: pointer;
+            text-align: center;
+            transition: 0.2s;
+        }
+
+        .upload:hover {
+            border-color: #5b5cf0;
+            background: #f8f8ff;
+        }
+
+        .upload strong {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 17px;
+        }
+
+        .upload span {
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        .file-info {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            background: #f3f4f6;
+            font-size: 14px;
+        }
+
+        .preview {
+            display: none;
+            margin-top: 25px;
+        }
+
+        .preview img {
+            display: block;
+            max-width: 100%;
+            max-height: 350px;
+            margin: 0 auto;
+            border-radius: 10px;
+            object-fit: contain;
+        }
+
+        .controls {
+            display: none;
+            margin-top: 30px;
+        }
+
+        .control-group {
+            margin-bottom: 20px;
+        }
+
+        .control-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        select,
+        input[type="range"] {
+            width: 100%;
+        }
+
+        select {
+            padding: 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 10px;
+            background: #ffffff;
+            font-size: 15px;
+        }
+
+        .quality-row {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .quality-row input {
+            flex: 1;
+        }
+
+        #qualityValue {
+            width: 45px;
+            text-align: right;
+            font-weight: 600;
+        }
+
+        .button {
+            width: 100%;
+            padding: 14px 20px;
+            border: 0;
+            border-radius: 10px;
+            background: #5b5cf0;
+            color: #ffffff;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .button:hover {
+            background: #494ad8;
+        }
+
+        .button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .result {
+            display: none;
+            margin-top: 25px;
+            padding: 18px;
+            border-radius: 12px;
+            background: #f3f4f6;
+        }
+
+        .result p {
+            margin: 6px 0;
+            font-size: 14px;
+        }
+
+        .download {
+            display: block;
+            margin-top: 15px;
+            padding: 13px 20px;
+            border-radius: 10px;
+            background: #111827;
+            color: #ffffff;
+            text-align: center;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .download:hover {
+            background: #1f2937;
+        }
+
+        .error {
+            display: none;
+            margin-top: 20px;
+            padding: 12px 15px;
+            border-radius: 10px;
+            background: #fef2f2;
+            color: #b91c1c;
+            font-size: 14px;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                margin: 25px auto;
+            }
+
+            .card {
+                padding: 22px;
+            }
+
+            h1 {
+                font-size: 27px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <a href="../index.html" class="back">
+            ← Akifio ana sayfa
+        </a>
+
+        <div class="card">
+
+            <h1>Görsel Dönüştür</h1>
+
+            <p class="description">
+                Görsellerini farklı formatlara hızlı ve kolay şekilde dönüştür.
+                İşlem tamamen tarayıcında gerçekleşir.
+            </p>
+
+            <label class="upload" for="fileInput">
+                <div>
+                    <strong>Görsel seç</strong>
+                    <span>
+                        JPG, PNG veya WebP dosyanı buraya yükle
+                    </span>
+                </div>
+            </label>
+
+            <input
+                id="fileInput"
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+            >
+
+            <div class="file-info" id="fileInfo"></div>
+
+            <div class="preview" id="preview">
+                <img
+                    id="previewImage"
+                    alt="Görsel önizleme"
+                >
+            </div>
+
+            <div class="controls" id="controls">
+
+                <div class="control-group">
+
+                    <label for="format">
+                        Dönüştürülecek format
+                    </label>
+
+                    <select id="format">
+
+                        <option value="png">
+                            PNG
+                        </option>
+
+                        <option value="jpeg">
+                            JPG
+                        </option>
+
+                        <option value="webp">
+                            WebP
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <div class="control-group">
+
+                    <label for="quality">
+                        Kalite
+                    </label>
+
+                    <div class="quality-row">
+
+                        <input
+                            id="quality"
+                            type="range"
+                            min="10"
+                            max="100"
+                            value="90"
+                        >
+
+                        <span id="qualityValue">
+                            90%
+                        </span>
+
+                    </div>
+
+                </div>
+
+                <button
+                    type="button"
+                    class="button"
+                    id="convertButton"
+                >
+                    Görseli Dönüştür
+                </button>
+
+            </div>
+
+            <div class="result" id="result">
+
+                <p>
+                    <strong>Orijinal boyut:</strong>
+                    <span id="originalSize"></span>
+                </p>
+
+                <p>
+                    <strong>Yeni boyut:</strong>
+                    <span id="convertedSize"></span>
+                </p>
+
+                <p>
+                    <strong>Format:</strong>
+                    <span id="convertedFormat"></span>
+                </p>
+
+                <a
+                    id="downloadButton"
+                    class="download"
+                    download="akifio-donusturulmus"
+                >
+                    Dönüştürülen Görseli İndir
+                </a>
+
+            </div>
+
+            <div
+                class="error"
+                id="error"
+            ></div>
+
+        </div>
+
+    </div>
+
+    <script>
+        "use strict";
+
+        const fileInput = document.getElementById("fileInput");
+        const fileInfo = document.getElementById("fileInfo");
+
+        const preview = document.getElementById("preview");
+        const previewImage = document.getElementById("previewImage");
+
+        const controls = document.getElementById("controls");
+
+        const formatSelect = document.getElementById("format");
+
+        const quality = document.getElementById("quality");
+        const qualityValue = document.getElementById("qualityValue");
+
+        const convertButton =
+            document.getElementById("convertButton");
+
+        const result = document.getElementById("result");
+
+        const originalSize =
+            document.getElementById("originalSize");
+
+        const convertedSize =
+            document.getElementById("convertedSize");
+
+        const convertedFormat =
+            document.getElementById("convertedFormat");
+
+        const downloadButton =
+            document.getElementById("downloadButton");
+
+        const errorBox =
+            document.getElementById("error");
+
+        let selectedFile = null;
+        let previewUrl = null;
+        let downloadUrl = null;
+
+
+        function showError(message) {
+
+            errorBox.textContent = message;
+            errorBox.style.display = "block";
+
+        }
+
+
+        function hideError() {
+
+            errorBox.textContent = "";
+            errorBox.style.display = "none";
+
+        }
+
+
+        function formatSize(bytes) {
+
+            if (bytes < 1024) {
+                return bytes + " B";
+            }
+
+            if (bytes < 1024 * 1024) {
+                return (bytes / 1024).toFixed(1) + " KB";
+            }
+
+            return (bytes / (1024 * 1024)).toFixed(2) + " MB";
+
+        }
+
+
+        function getFormatName(format) {
+
+            if (format === "jpeg") {
+                return "JPG";
+            }
+
+            return format.toUpperCase();
+
+        }
+
+
+        function getExtension(format) {
+
+            if (format === "jpeg") {
+                return "jpg";
+            }
+
+            return format;
+
+        }
+
+
+        function getMimeType(format) {
+
+            if (format === "jpeg") {
+                return "image/jpeg";
+            }
+
+            if (format === "webp") {
+                return "image/webp";
+            }
+
+            return "image/png";
+
+        }
+
+
+        function resetResult() {
+
+            result.style.display = "none";
+
+            if (downloadUrl) {
+
+                URL.revokeObjectURL(downloadUrl);
+
+                downloadUrl = null;
+
+            }
+
+            downloadButton.removeAttribute("href");
+
+        }
+
+
+        fileInput.addEventListener("change", () => {
+
+            hideError();
+
+            resetResult();
+
+            const file = fileInput.files[0];
+
+            if (!file) {
+                return;
+            }
+
+
+            if (!file.type.startsWith("image/")) {
+
+                showError(
+                    "Lütfen geçerli bir JPG, PNG veya WebP görseli seç."
+                );
+
+                fileInput.value = "";
+
+                return;
+            }
+
+
+            selectedFile = file;
+
+
+            if (previewUrl) {
+
+                URL.revokeObjectURL(previewUrl);
+
+            }
+
+
+            previewUrl =
+                URL.createObjectURL(selectedFile);
+
+
+            previewImage.src = previewUrl;
+
+
+            fileInfo.textContent =
+                "Seçilen dosya: " +
+                selectedFile.name +
+                " (" +
+                formatSize(selectedFile.size) +
+                ")";
+
+            fileInfo.style.display = "block";
+
+            preview.style.display = "block";
+
+            controls.style.display = "block";
+
+        });
+
+
+        quality.addEventListener("input", () => {
+
+            qualityValue.textContent =
+                quality.value + "%";
+
+        });
+
+
+        convertButton.addEventListener("click", () => {
+
+            hideError();
+            resetResult();
+
+
+            if (!selectedFile) {
+
+                showError(
+                    "Önce bir görsel seç."
+                );
+
+                return;
+            }
+
+
+            convertButton.disabled = true;
+
+            convertButton.textContent =
+                "Dönüştürülüyor...";
+
+
+            const image = new Image();
+
+
+            image.onload = () => {
+
+                try {
+
+                    const canvas =
+                        document.createElement("canvas");
+
+                    const context =
+                        canvas.getContext("2d");
+
+
+                    if (!context) {
+
+                        throw new Error(
+                            "Tarayıcı canvas desteği bulunamadı."
+                        );
+
+                    }
+
+
+                    canvas.width =
+                        image.naturalWidth;
+
+                    canvas.height =
+                        image.naturalHeight;
+
+
+                    context.drawImage(
+                        image,
+                        0,
+                        0,
+                        canvas.width,
+                        canvas.height
+                    );
+
+
+                    const selectedFormat =
+                        formatSelect.value;
+
+                    const mimeType =
+                        getMimeType(selectedFormat);
+
+                    const qualityNumber =
+                        Number(quality.value) / 100;
+
+
+                    canvas.toBlob(
+                        (blob) => {
+
+                            convertButton.disabled = false;
+
+                            convertButton.textContent =
+                                "Görseli Dönüştür";
+
+
+                            if (!blob) {
+
+                                showError(
+                                    "Görsel dönüştürülemedi."
+                                );
+
+                                return;
+                            }
+
+
+                            downloadUrl =
+                                URL.createObjectURL(blob);
+
+
+                            originalSize.textContent =
+                                formatSize(
+                                    selectedFile.size
+                                );
+
+
+                            convertedSize.textContent =
+                                formatSize(
+                                    blob.size
+                                );
+
+
+                            convertedFormat.textContent =
+                                getFormatName(
+                                    selectedFormat
+                                );
+
+
+                            downloadButton.href =
+                                downloadUrl;
+
+
+                            downloadButton.download =
+                                "akifio-donusturulmus." +
+                                getExtension(
+                                    selectedFormat
+                                );
+
+
+                            result.style.display =
+                                "block";
+
+                        },
+                        mimeType,
+                        qualityNumber
+                    );
+
+                } catch (error) {
+
+                    convertButton.disabled = false;
+
+                    convertButton.textContent =
+                        "Görseli Dönüştür";
+
+                    showError(
+                        "Görsel dönüştürülürken bir hata oluştu."
+                    );
+
+                }
+
+            };
+
+
+            image.onerror = () => {
+
+                convertButton.disabled = false;
+
+                convertButton.textContent =
+                    "Görseli Dönüştür";
+
+                showError(
+                    "Görsel okunamadı."
+                );
+
+            };
+
+
+            image.src =
+                URL.createObjectURL(selectedFile);
+
+        });
+    </script>
+
+</body>
+</html>
