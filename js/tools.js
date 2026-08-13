@@ -42,7 +42,7 @@ const AKIFIO_TOOLS = [
         category: "Görsel Araçları",
         icon: "◇",
         url: "tools/image-resize.html",
-        active: false
+        active: true
     },
 
     {
