@@ -1,1 +1,983 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <title>PDF to JPG - Akifio</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f7f8fc;
+            color: #111827;
+        }
+
+        .container {
+            width: min(900px, calc(100% - 32px));
+            margin: 50px auto;
+        }
+
+        .back {
+            display: inline-block;
+            margin-bottom: 24px;
+            color: #5b5cf0;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .back:hover {
+            text-decoration: underline;
+        }
+
+        .card {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 18px;
+            padding: 32px;
+            box-shadow: 0 10px 30px rgba(17, 24, 39, 0.06);
+        }
+
+        h1 {
+            margin: 0 0 10px;
+            font-size: 32px;
+        }
+
+        .description {
+            margin: 0 0 28px;
+            color: #6b7280;
+            line-height: 1.6;
+        }
+
+        .upload {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 180px;
+            padding: 25px;
+            border: 2px dashed #d1d5db;
+            border-radius: 14px;
+            cursor: pointer;
+            text-align: center;
+            transition: 0.2s;
+        }
+
+        .upload:hover {
+            border-color: #5b5cf0;
+            background: #f8f8ff;
+        }
+
+        .upload strong {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 17px;
+        }
+
+        .upload span {
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        .file-info {
+            display: none;
+            margin-top: 25px;
+            padding: 16px;
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+        }
+
+        .file-name {
+            font-weight: 600;
+            word-break: break-word;
+        }
+
+        .file-details {
+            margin-top: 6px;
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .controls {
+            display: none;
+            margin-top: 25px;
+        }
+
+        .control-title {
+            margin: 0 0 15px;
+            font-size: 17px;
+        }
+
+        .quality-row {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .quality-row label {
+            min-width: 100px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .quality-row input {
+            flex: 1;
+        }
+
+        #qualityValue {
+            width: 50px;
+            text-align: right;
+            font-weight: 600;
+        }
+
+        .button {
+            width: 100%;
+            padding: 14px 20px;
+            border: 0;
+            border-radius: 10px;
+            background: #5b5cf0;
+            color: #ffffff;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .button:hover {
+            background: #494ad8;
+        }
+
+        .button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .result {
+            display: none;
+            margin-top: 25px;
+            padding: 20px;
+            border-radius: 14px;
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+        }
+
+        .result p {
+            margin: 6px 0;
+            font-size: 14px;
+        }
+
+        .download {
+            display: block;
+            margin-top: 15px;
+            padding: 13px 20px;
+            border-radius: 10px;
+            background: #111827;
+            color: #ffffff;
+            text-align: center;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .download:hover {
+            background: #1f2937;
+        }
+
+        .pages {
+            display: none;
+            margin-top: 25px;
+        }
+
+        .pages-title {
+            margin: 0 0 15px;
+            font-size: 17px;
+        }
+
+        .page-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 15px;
+        }
+
+        .page-card {
+            padding: 12px;
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+        }
+
+        .page-card img {
+            display: block;
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            background: #ffffff;
+        }
+
+        .page-number {
+            margin-top: 9px;
+            font-size: 13px;
+            color: #6b7280;
+            text-align: center;
+        }
+
+        .page-download {
+            display: block;
+            margin-top: 8px;
+            padding: 9px;
+            border-radius: 8px;
+            background: #111827;
+            color: #ffffff;
+            text-align: center;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .warning {
+            margin-top: 15px;
+            color: #6b7280;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .error {
+            display: none;
+            margin-top: 20px;
+            padding: 12px 15px;
+            border-radius: 10px;
+            background: #fef2f2;
+            color: #b91c1c;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .loading {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            color: #6b7280;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                margin: 25px auto;
+            }
+
+            .card {
+                padding: 22px;
+            }
+
+            h1 {
+                font-size: 27px;
+            }
+
+            .quality-row {
+                gap: 10px;
+            }
+
+            .page-list {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <a href="../index.html" class="back">
+        ← Akifio ana sayfa
+    </a>
+
+    <div class="card">
+
+        <h1>PDF to JPG</h1>
+
+        <p class="description">
+            PDF dosyanın sayfalarını yüksek kaliteli JPG görsellerine dönüştür.
+            İşlem tarayıcında gerçekleşir.
+        </p>
+
+        <label class="upload" for="fileInput">
+            <div>
+                <strong>PDF dosyası seç</strong>
+                <span>PDF dosyanı buraya yükle</span>
+            </div>
+        </label>
+
+        <input
+            id="fileInput"
+            type="file"
+            accept="application/pdf"
+        >
+
+        <div class="file-info" id="fileInfo">
+
+            <div class="file-name" id="fileName"></div>
+
+            <div class="file-details" id="fileDetails"></div>
+
+        </div>
+
+        <div class="controls" id="controls">
+
+            <h2 class="control-title">
+                JPG ayarları
+            </h2>
+
+            <div class="quality-row">
+
+                <label for="quality">
+                    JPG Kalitesi
+                </label>
+
+                <input
+                    id="quality"
+                    type="range"
+                    min="40"
+                    max="100"
+                    value="90"
+                >
+
+                <span id="qualityValue">
+                    90%
+                </span>
+
+            </div>
+
+            <button
+                type="button"
+                class="button"
+                id="convertButton"
+            >
+                JPG'ye Dönüştür
+            </button>
+
+            <p class="warning">
+                Çok sayfalı PDF'lerde her sayfa ayrı bir JPG olarak oluşturulur.
+                İşlem tamamen tarayıcında gerçekleştirilir.
+            </p>
+
+        </div>
+
+        <div class="loading" id="loading">
+            PDF sayfaları JPG'ye dönüştürülüyor...
+        </div>
+
+        <div class="result" id="result">
+
+            <p>
+                <strong>Sayfa sayısı:</strong>
+                <span id="pageCount"></span>
+            </p>
+
+            <p>
+                <strong>Durum:</strong>
+                <span id="resultText"></span>
+            </p>
+
+            <a
+                id="downloadAllButton"
+                class="download"
+                download="akifio-pdf-jpg.zip"
+                style="display:none;"
+            >
+                Tüm JPG'leri İndir
+            </a>
+
+        </div>
+
+        <div class="pages" id="pages">
+
+            <h2 class="pages-title">
+                Oluşturulan JPG'ler
+            </h2>
+
+            <div
+                class="page-list"
+                id="pageList"
+            ></div>
+
+        </div>
+
+        <div class="error" id="error"></div>
+
+    </div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+<script>
+
+    pdfjsLib.GlobalWorkerOptions.workerSrc =
+        "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+
+
+    const fileInput =
+        document.getElementById("fileInput");
+
+    const fileInfo =
+        document.getElementById("fileInfo");
+
+    const fileName =
+        document.getElementById("fileName");
+
+    const fileDetails =
+        document.getElementById("fileDetails");
+
+    const controls =
+        document.getElementById("controls");
+
+    const quality =
+        document.getElementById("quality");
+
+    const qualityValue =
+        document.getElementById("qualityValue");
+
+    const convertButton =
+        document.getElementById("convertButton");
+
+    const result =
+        document.getElementById("result");
+
+    const pageCount =
+        document.getElementById("pageCount");
+
+    const resultText =
+        document.getElementById("resultText");
+
+    const pages =
+        document.getElementById("pages");
+
+    const pageList =
+        document.getElementById("pageList");
+
+    const loading =
+        document.getElementById("loading");
+
+    const errorBox =
+        document.getElementById("error");
+
+    const downloadAllButton =
+        document.getElementById("downloadAllButton");
+
+
+    let selectedFile = null;
+
+    let downloadUrls = [];
+
+    let zipUrl = null;
+
+
+    function showError(message) {
+
+        errorBox.textContent =
+            message;
+
+        errorBox.style.display =
+            "block";
+    }
+
+
+    function hideError() {
+
+        errorBox.textContent =
+            "";
+
+        errorBox.style.display =
+            "none";
+    }
+
+
+    function formatSize(bytes) {
+
+        if (bytes < 1024) {
+
+            return bytes + " B";
+        }
+
+        if (bytes < 1024 * 1024) {
+
+            return (
+                bytes / 1024
+            ).toFixed(1) + " KB";
+        }
+
+        return (
+            bytes / (1024 * 1024)
+        ).toFixed(2) + " MB";
+    }
+
+
+    function clearResults() {
+
+        pageList.innerHTML =
+            "";
+
+        pages.style.display =
+            "none";
+
+        result.style.display =
+            "none";
+
+        downloadAllButton.style.display =
+            "none";
+
+
+        downloadUrls.forEach(
+            url => URL.revokeObjectURL(url)
+        );
+
+        downloadUrls = [];
+
+
+        if (zipUrl) {
+
+            URL.revokeObjectURL(zipUrl);
+
+            zipUrl = null;
+        }
+    }
+
+
+    quality.addEventListener(
+        "input",
+        () => {
+
+            qualityValue.textContent =
+                quality.value + "%";
+
+        }
+    );
+
+
+    fileInput.addEventListener(
+        "change",
+        async () => {
+
+            hideError();
+
+            clearResults();
+
+            const file =
+                fileInput.files[0];
+
+            if (!file) {
+                return;
+            }
+
+
+            if (
+                file.type !==
+                "application/pdf"
+            ) {
+
+                showError(
+                    "Lütfen geçerli bir PDF dosyası seç."
+                );
+
+                fileInput.value = "";
+
+                return;
+            }
+
+
+            if (
+                !window.pdfjsLib
+            ) {
+
+                showError(
+                    "PDF sistemi yüklenemedi. Sayfayı yenileyip tekrar dene."
+                );
+
+                return;
+            }
+
+
+            try {
+
+                const bytes =
+                    await file.arrayBuffer();
+
+                const pdf =
+                    await pdfjsLib.getDocument({
+                        data: bytes
+                    }).promise;
+
+
+                selectedFile =
+                    file;
+
+
+                fileName.textContent =
+                    file.name;
+
+
+                fileDetails.textContent =
+                    `${pdf.numPages} sayfa • ${formatSize(file.size)}`;
+
+
+                fileInfo.style.display =
+                    "block";
+
+
+                controls.style.display =
+                    "block";
+
+
+            } catch (error) {
+
+                console.error(error);
+
+                selectedFile =
+                    null;
+
+                showError(
+                    "PDF okunamadı. Dosyanın geçerli olduğundan emin ol."
+                );
+            }
+
+        }
+    );
+
+
+    convertButton.addEventListener(
+        "click",
+        async () => {
+
+            hideError();
+
+            clearResults();
+
+
+            if (!selectedFile) {
+
+                showError(
+                    "Önce bir PDF dosyası seç."
+                );
+
+                return;
+            }
+
+
+            convertButton.disabled =
+                true;
+
+            convertButton.textContent =
+                "Dönüştürülüyor...";
+
+
+            loading.style.display =
+                "block";
+
+
+            try {
+
+                const bytes =
+                    await selectedFile.arrayBuffer();
+
+
+                const pdf =
+                    await pdfjsLib.getDocument({
+                        data: bytes
+                    }).promise;
+
+
+                const qualityValueNumber =
+                    Number(quality.value) / 100;
+
+
+                const zip =
+                    new JSZip();
+
+
+                let totalPages =
+                    pdf.numPages;
+
+
+                for (
+                    let pageNumber = 1;
+                    pageNumber <= totalPages;
+                    pageNumber++
+                ) {
+
+                    const page =
+                        await pdf.getPage(
+                            pageNumber
+                        );
+
+
+                    const baseViewport =
+                        page.getViewport({
+                            scale: 1
+                        });
+
+
+                    const maxWidth =
+                        1600;
+
+
+                    let scale =
+                        2;
+
+
+                    if (
+                        baseViewport.width * scale >
+                        maxWidth
+                    ) {
+
+                        scale =
+                            maxWidth /
+                            baseViewport.width;
+                    }
+
+
+                    const viewport =
+                        page.getViewport({
+                            scale: scale
+                        });
+
+
+                    const canvas =
+                        document.createElement(
+                            "canvas"
+                        );
+
+
+                    const context =
+                        canvas.getContext(
+                            "2d"
+                        );
+
+
+                    canvas.width =
+                        Math.ceil(
+                            viewport.width
+                        );
+
+
+                    canvas.height =
+                        Math.ceil(
+                            viewport.height
+                        );
+
+
+                    await page.render({
+                        canvasContext:
+                            context,
+                        viewport:
+                            viewport
+                    }).promise;
+
+
+                    const blob =
+                        await new Promise(
+                            resolve => {
+
+                                canvas.toBlob(
+                                    resolve,
+                                    "image/jpeg",
+                                    qualityValueNumber
+                                );
+
+                            }
+                        );
+
+
+                    if (!blob) {
+
+                        throw new Error(
+                            "JPG oluşturulamadı."
+                        );
+                    }
+
+
+                    const jpgUrl =
+                        URL.createObjectURL(
+                            blob
+                        );
+
+
+                    downloadUrls.push(
+                        jpgUrl
+                    );
+
+
+                    const pageCard =
+                        document.createElement(
+                            "div"
+                        );
+
+                    pageCard.className =
+                        "page-card";
+
+
+                    const image =
+                        document.createElement(
+                            "img"
+                        );
+
+                    image.src =
+                        jpgUrl;
+
+                    image.alt =
+                        `PDF sayfa ${pageNumber}`;
+
+
+                    const number =
+                        document.createElement(
+                            "div"
+                        );
+
+                    number.className =
+                        "page-number";
+
+                    number.textContent =
+                        `Sayfa ${pageNumber} • ${formatSize(blob.size)}`;
+
+
+                    const download =
+                        document.createElement(
+                            "a"
+                        );
+
+                    download.className =
+                        "page-download";
+
+                    download.href =
+                        jpgUrl;
+
+                    download.download =
+                        `akifio-sayfa-${pageNumber}.jpg`;
+
+                    download.textContent =
+                        "JPG'yi İndir";
+
+
+                    pageCard.appendChild(
+                        image
+                    );
+
+                    pageCard.appendChild(
+                        number
+                    );
+
+                    pageCard.appendChild(
+                        download
+                    );
+
+
+                    pageList.appendChild(
+                        pageCard
+                    );
+
+
+                    zip.file(
+                        `akifio-sayfa-${pageNumber}.jpg`,
+                        blob
+                    );
+                }
+
+
+                const zipBlob =
+                    await zip.generateAsync({
+                        type: "blob"
+                    });
+
+
+                zipUrl =
+                    URL.createObjectURL(
+                        zipBlob
+                    );
+
+
+                downloadAllButton.href =
+                    zipUrl;
+
+
+                pageCount.textContent =
+                    totalPages;
+
+
+                resultText.textContent =
+                    "Dönüştürme tamamlandı.";
+
+
+                result.style.display =
+                    "block";
+
+
+                pages.style.display =
+                    "block";
+
+
+                downloadAllButton.style.display =
+                    "block";
+
+
+            } catch (error) {
+
+                console.error(error);
+
+                showError(
+                    "PDF JPG'ye dönüştürülemedi. Dosyanın geçerli olduğundan emin ol."
+                );
+
+            } finally {
+
+                loading.style.display =
+                    "none";
+
+
+                convertButton.disabled =
+                    false;
+
+                convertButton.textContent =
+                    "JPG'ye Dönüştür";
+            }
+
+        }
+    );
+
+
+    window.addEventListener(
+        "beforeunload",
+        () => {
+
+            downloadUrls.forEach(
+                url => URL.revokeObjectURL(url)
+            );
+
+
+            if (zipUrl) {
+
+                URL.revokeObjectURL(
+                    zipUrl
+                );
+            }
+
+        }
+    );
+
+</script>
+
+</body>
+</html>
