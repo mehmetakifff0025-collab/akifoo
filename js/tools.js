@@ -83,7 +83,7 @@ const AKIFIO_TOOLS = [
         category: "PDF Araçları",
         icon: "▤",
         url: "tools/pdf-merge.html",
-        active: false
+        active: true
     },
 
     {
