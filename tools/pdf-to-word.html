@@ -19,8 +19,8 @@
         }
 
         .container {
-            width: min(900px, calc(100% - 32px));
-            margin: 50px auto;
+            width: min(920px, calc(100% - 32px));
+            margin: 45px auto;
         }
 
         .back {
@@ -36,11 +36,11 @@
         }
 
         .card {
-            background: #ffffff;
+            background: #fff;
             border: 1px solid #e5e7eb;
-            border-radius: 18px;
-            padding: 32px;
-            box-shadow: 0 10px 30px rgba(17, 24, 39, 0.06);
+            border-radius: 20px;
+            padding: 34px;
+            box-shadow: 0 10px 35px rgba(17, 24, 39, .06);
         }
 
         h1 {
@@ -55,27 +55,33 @@
         }
 
         .upload {
+            min-height: 190px;
+            padding: 30px;
+            border: 2px dashed #d1d5db;
+            border-radius: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
-            min-height: 180px;
-            padding: 25px;
-            border: 2px dashed #d1d5db;
-            border-radius: 14px;
-            cursor: pointer;
             text-align: center;
-            transition: 0.2s;
+            cursor: pointer;
+            transition: .2s;
         }
 
-        .upload:hover {
+        .upload:hover,
+        .upload.dragover {
             border-color: #5b5cf0;
             background: #f8f8ff;
         }
 
+        .upload-icon {
+            font-size: 38px;
+            margin-bottom: 10px;
+        }
+
         .upload strong {
             display: block;
+            font-size: 18px;
             margin-bottom: 8px;
-            font-size: 17px;
         }
 
         .upload span {
@@ -89,43 +95,59 @@
 
         .file-info {
             display: none;
-            margin-top: 25px;
-            padding: 16px;
-            background: #f9fafb;
+            margin-top: 24px;
+            padding: 17px;
             border: 1px solid #e5e7eb;
-            border-radius: 12px;
+            border-radius: 13px;
+            background: #f9fafb;
         }
 
         .file-name {
-            font-weight: 600;
+            font-weight: 700;
             word-break: break-word;
         }
 
         .file-details {
-            margin-top: 6px;
+            margin-top: 7px;
             color: #6b7280;
             font-size: 14px;
         }
 
-        .controls {
+        .analysis {
             display: none;
-            margin-top: 25px;
+            margin-top: 22px;
+            padding: 18px;
+            border: 1px solid #e5e7eb;
+            border-radius: 13px;
+            background: #fafafa;
         }
 
-        .control-title {
-            margin: 0 0 15px;
-            font-size: 17px;
+        .analysis-title {
+            margin: 0 0 8px;
+            font-size: 16px;
+        }
+
+        .analysis-text {
+            margin: 0;
+            color: #6b7280;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .controls {
+            display: none;
+            margin-top: 22px;
         }
 
         .button {
             width: 100%;
-            padding: 14px 20px;
+            padding: 15px 20px;
             border: 0;
-            border-radius: 10px;
+            border-radius: 11px;
             background: #5b5cf0;
-            color: #ffffff;
+            color: #fff;
             font-size: 15px;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
         }
 
@@ -134,32 +156,20 @@
         }
 
         .button:disabled {
-            opacity: 0.5;
+            opacity: .55;
             cursor: not-allowed;
-        }
-
-        .loading {
-            display: none;
-            margin-top: 20px;
-            padding: 15px;
-            border-radius: 10px;
-            background: #f9fafb;
-            border: 1px solid #e5e7eb;
-            color: #6b7280;
-            text-align: center;
-            font-size: 14px;
         }
 
         .progress {
             display: none;
-            margin-top: 15px;
+            margin-top: 22px;
         }
 
         .progress-bar {
             width: 100%;
-            height: 8px;
+            height: 9px;
             background: #e5e7eb;
-            border-radius: 10px;
+            border-radius: 20px;
             overflow: hidden;
         }
 
@@ -167,11 +177,11 @@
             width: 0%;
             height: 100%;
             background: #5b5cf0;
-            transition: width 0.2s;
+            transition: width .2s;
         }
 
         .progress-text {
-            margin-top: 8px;
+            margin-top: 9px;
             text-align: center;
             color: #6b7280;
             font-size: 13px;
@@ -179,7 +189,7 @@
 
         .result {
             display: none;
-            margin-top: 25px;
+            margin-top: 24px;
             padding: 20px;
             border-radius: 14px;
             background: #f0fdf4;
@@ -193,14 +203,14 @@
 
         .download {
             display: block;
-            margin-top: 15px;
-            padding: 13px 20px;
+            margin-top: 16px;
+            padding: 14px 20px;
             border-radius: 10px;
             background: #111827;
-            color: #ffffff;
+            color: #fff;
             text-align: center;
             text-decoration: none;
-            font-weight: 600;
+            font-weight: 700;
         }
 
         .download:hover {
@@ -208,7 +218,7 @@
         }
 
         .warning {
-            margin-top: 15px;
+            margin-top: 16px;
             color: #6b7280;
             font-size: 12px;
             line-height: 1.5;
@@ -217,7 +227,7 @@
         .error {
             display: none;
             margin-top: 20px;
-            padding: 12px 15px;
+            padding: 13px 15px;
             border-radius: 10px;
             background: #fef2f2;
             color: #b91c1c;
@@ -255,14 +265,27 @@
 
         <p class="description">
             PDF dosyanı düzenlenebilir Word belgesine dönüştür.
-            İşlem tarayıcında gerçekleşir.
+            Akifio PDF'ni analiz ederek mümkün olan en iyi dönüşümü yapmaya çalışır.
         </p>
 
-        <label class="upload" for="fileInput">
+        <label class="upload" id="uploadArea" for="fileInput">
+
             <div>
-                <strong>PDF dosyası seç</strong>
-                <span>PDF dosyanı buraya yükle</span>
+
+                <div class="upload-icon">
+                    📄
+                </div>
+
+                <strong>
+                    PDF dosyanı seç
+                </strong>
+
+                <span>
+                    Tıklayabilir veya PDF dosyanı buraya sürükleyebilirsin
+                </span>
+
             </div>
+
         </label>
 
         <input
@@ -273,17 +296,38 @@
 
         <div class="file-info" id="fileInfo">
 
-            <div class="file-name" id="fileName"></div>
+            <div
+                class="file-name"
+                id="fileName"
+            ></div>
 
-            <div class="file-details" id="fileDetails"></div>
+            <div
+                class="file-details"
+                id="fileDetails"
+            ></div>
 
         </div>
 
-        <div class="controls" id="controls">
+        <div
+            class="analysis"
+            id="analysis"
+        >
 
-            <h2 class="control-title">
-                Word'e dönüştür
+            <h2 class="analysis-title">
+                PDF analiz edildi
             </h2>
+
+            <p
+                class="analysis-text"
+                id="analysisText"
+            ></p>
+
+        </div>
+
+        <div
+            class="controls"
+            id="controls"
+        >
 
             <button
                 type="button"
@@ -294,24 +338,26 @@
             </button>
 
             <p class="warning">
-                Metin tabanlı PDF'lerde daha iyi sonuç verir.
-                Karmaşık sayfa düzenleri, tablolar ve görseller
-                Word belgesinde birebir korunmayabilir.
+                Dönüşüm tarayıcında gerçekleştirilir.
+                Metin tabanlı PDF'lerde düzenlenebilirlik daha yüksek olur.
+                Çok karmaşık tasarımlar, tablolar veya taranmış belgelerde
+                PDF görünümü birebir korunmayabilir.
             </p>
 
         </div>
 
-        <div class="loading" id="loading">
-            PDF okunuyor ve Word belgesi hazırlanıyor...
-        </div>
-
-        <div class="progress" id="progress">
+        <div
+            class="progress"
+            id="progress"
+        >
 
             <div class="progress-bar">
+
                 <div
                     class="progress-fill"
                     id="progressFill"
                 ></div>
+
             </div>
 
             <div
@@ -323,16 +369,24 @@
 
         </div>
 
-        <div class="result" id="result">
+        <div
+            class="result"
+            id="result"
+        >
 
             <p>
-                <strong>Sayfa sayısı:</strong>
-                <span id="pageCount"></span>
+                <strong>Sayfa:</strong>
+                <span id="resultPages"></span>
             </p>
 
             <p>
                 <strong>Durum:</strong>
-                <span id="resultText"></span>
+                <span id="resultStatus"></span>
+            </p>
+
+            <p>
+                <strong>Word boyutu:</strong>
+                <span id="resultSize"></span>
             </p>
 
             <a
@@ -345,17 +399,18 @@
 
         </div>
 
-        <div class="error" id="error"></div>
+        <div
+            class="error"
+            id="error"
+        ></div>
 
     </div>
 
 </div>
 
 
-<!-- PDF.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 
-<!-- docx -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/docx/8.5.0/docx.umd.min.js"></script>
 
 
@@ -368,6 +423,9 @@
     const fileInput =
         document.getElementById("fileInput");
 
+    const uploadArea =
+        document.getElementById("uploadArea");
+
     const fileInfo =
         document.getElementById("fileInfo");
 
@@ -377,14 +435,17 @@
     const fileDetails =
         document.getElementById("fileDetails");
 
+    const analysis =
+        document.getElementById("analysis");
+
+    const analysisText =
+        document.getElementById("analysisText");
+
     const controls =
         document.getElementById("controls");
 
     const convertButton =
         document.getElementById("convertButton");
-
-    const loading =
-        document.getElementById("loading");
 
     const progress =
         document.getElementById("progress");
@@ -398,11 +459,14 @@
     const result =
         document.getElementById("result");
 
-    const pageCount =
-        document.getElementById("pageCount");
+    const resultPages =
+        document.getElementById("resultPages");
 
-    const resultText =
-        document.getElementById("resultText");
+    const resultStatus =
+        document.getElementById("resultStatus");
+
+    const resultSize =
+        document.getElementById("resultSize");
 
     const downloadButton =
         document.getElementById("downloadButton");
@@ -414,6 +478,10 @@
     let selectedFile = null;
 
     let downloadUrl = null;
+
+    let pdfPageCount = 0;
+
+    let detectedTextPages = 0;
 
 
     function showError(message) {
@@ -455,18 +523,19 @@
     }
 
 
-    function updateProgress(current, total) {
+    function updateProgress(current, total, text) {
 
-        const percent =
+        const percentage =
             Math.round(
                 (current / total) * 100
             );
 
         progressFill.style.width =
-            percent + "%";
+            percentage + "%";
 
         progressText.textContent =
-            `Sayfa ${current} / ${total} okunuyor...`;
+            text ||
+            `${current} / ${total}`;
     }
 
 
@@ -478,20 +547,24 @@
     }
 
 
-    function groupTextItems(items) {
+    function groupLines(items) {
 
-        const lines = [];
+        const groups = [];
 
-        let currentLine = [];
+        let current = [];
 
         let currentY = null;
 
 
         items.forEach(item => {
 
-            if (!item.str || !item.str.trim()) {
+            if (
+                !item.str ||
+                !item.str.trim()
+            ) {
                 return;
             }
+
 
             const y =
                 item.transform
@@ -504,27 +577,29 @@
                 Math.abs(y - currentY) < 5
             ) {
 
-                currentLine.push(item);
+                current.push(item);
 
             } else {
 
-                if (currentLine.length > 0) {
-                    lines.push(currentLine);
+                if (current.length) {
+                    groups.push(current);
                 }
 
-                currentLine = [item];
+                current = [item];
             }
 
+
             currentY = y;
+
         });
 
 
-        if (currentLine.length > 0) {
-            lines.push(currentLine);
+        if (current.length) {
+            groups.push(current);
         }
 
 
-        return lines
+        return groups
             .map(line => {
 
                 line.sort(
@@ -533,122 +608,263 @@
                         b.transform[4]
                 );
 
+
                 return cleanText(
                     line
                         .map(item => item.str)
                         .join(" ")
                 );
+
             })
-            .filter(line => line.length > 0);
+            .filter(Boolean);
+    }
+
+
+    async function analyzePDF(file) {
+
+        const bytes =
+            await file.arrayBuffer();
+
+
+        const pdf =
+            await pdfjsLib
+                .getDocument({
+                    data: bytes
+                })
+                .promise;
+
+
+        pdfPageCount =
+            pdf.numPages;
+
+
+        let pagesWithText = 0;
+
+        let totalCharacters = 0;
+
+
+        const checkPages =
+            Math.min(
+                pdf.numPages,
+                5
+            );
+
+
+        for (
+            let i = 1;
+            i <= checkPages;
+            i++
+        ) {
+
+            const page =
+                await pdf.getPage(i);
+
+
+            const content =
+                await page.getTextContent();
+
+
+            const text =
+                content.items
+                    .map(item => item.str)
+                    .join(" ")
+                    .trim();
+
+
+            if (text.length > 20) {
+
+                pagesWithText++;
+
+                totalCharacters +=
+                    text.length;
+            }
+        }
+
+
+        detectedTextPages =
+            pagesWithText;
+
+
+        if (pagesWithText === 0) {
+
+            analysisText.textContent =
+                "Bu PDF'de çıkarılabilir metin bulunamadı. Belge büyük ihtimalle taranmış veya görüntü tabanlı. Mevcut tarayıcı dönüşümü yalnızca metin içeren PDF'lerde düzenlenebilir Word oluşturabilir.";
+
+        } else if (
+            pagesWithText === checkPages
+        ) {
+
+            analysisText.textContent =
+                "PDF metin ağırlıklı görünüyor. Metinler Word belgesine düzenlenebilir şekilde aktarılacak.";
+
+        } else {
+
+            analysisText.textContent =
+                "PDF kısmen metin içeriyor. Metin bulunan bölümler Word'e aktarılacak; bazı görsel veya taranmış bölümler düzenlenebilir olmayabilir.";
+        }
+
+
+        return pdf;
+    }
+
+
+    async function selectFile(file) {
+
+        hideError();
+
+
+        result.style.display =
+            "none";
+
+        analysis.style.display =
+            "none";
+
+        controls.style.display =
+            "none";
+
+
+        if (downloadUrl) {
+
+            URL.revokeObjectURL(
+                downloadUrl
+            );
+
+            downloadUrl =
+                null;
+        }
+
+
+        if (!file) {
+            return;
+        }
+
+
+        if (
+            file.type !==
+            "application/pdf"
+        ) {
+
+            showError(
+                "Lütfen geçerli bir PDF dosyası seç."
+            );
+
+            return;
+        }
+
+
+        try {
+
+            fileName.textContent =
+                file.name;
+
+
+            fileDetails.textContent =
+                "PDF analiz ediliyor...";
+
+
+            fileInfo.style.display =
+                "block";
+
+
+            const pdf =
+                await analyzePDF(file);
+
+
+            selectedFile =
+                file;
+
+
+            fileDetails.textContent =
+                `${pdf.numPages} sayfa • ${formatSize(file.size)}`;
+
+
+            analysis.style.display =
+                "block";
+
+
+            controls.style.display =
+                "block";
+
+
+        } catch (error) {
+
+            console.error(error);
+
+            selectedFile =
+                null;
+
+
+            showError(
+                "PDF okunamadı. Dosyanın geçerli olduğundan emin ol."
+            );
+        }
     }
 
 
     fileInput.addEventListener(
         "change",
-        async () => {
+        () => {
 
-            hideError();
+            selectFile(
+                fileInput.files[0]
+            );
 
-            result.style.display =
-                "none";
+        }
+    );
 
-            progress.style.display =
-                "none";
 
-            if (downloadUrl) {
+    [
+        "dragenter",
+        "dragover"
+    ].forEach(eventName => {
 
-                URL.revokeObjectURL(
-                    downloadUrl
+        uploadArea.addEventListener(
+            eventName,
+            event => {
+
+                event.preventDefault();
+
+                uploadArea.classList.add(
+                    "dragover"
                 );
 
-                downloadUrl = null;
             }
+        );
 
+    });
+
+
+    [
+        "dragleave",
+        "drop"
+    ].forEach(eventName => {
+
+        uploadArea.addEventListener(
+            eventName,
+            event => {
+
+                event.preventDefault();
+
+                uploadArea.classList.remove(
+                    "dragover"
+                );
+
+            }
+        );
+
+    });
+
+
+    uploadArea.addEventListener(
+        "drop",
+        event => {
 
             const file =
-                fileInput.files[0];
+                event.dataTransfer.files[0];
 
 
-            if (!file) {
-                return;
-            }
+            selectFile(file);
 
-
-            if (
-                file.type !==
-                "application/pdf"
-            ) {
-
-                showError(
-                    "Lütfen geçerli bir PDF dosyası seç."
-                );
-
-                fileInput.value =
-                    "";
-
-                return;
-            }
-
-
-            if (
-                !window.pdfjsLib ||
-                !window.docx
-            ) {
-
-                showError(
-                    "PDF veya Word sistemi yüklenemedi. Sayfayı yenileyip tekrar dene."
-                );
-
-                return;
-            }
-
-
-            try {
-
-                const bytes =
-                    await file.arrayBuffer();
-
-
-                const pdf =
-                    await pdfjsLib
-                        .getDocument({
-                            data: bytes
-                        })
-                        .promise;
-
-
-                selectedFile =
-                    file;
-
-
-                fileName.textContent =
-                    file.name;
-
-
-                fileDetails.textContent =
-                    `${pdf.numPages} sayfa • ${formatSize(file.size)}`;
-
-
-                fileInfo.style.display =
-                    "block";
-
-
-                controls.style.display =
-                    "block";
-
-
-            } catch (error) {
-
-                console.error(error);
-
-                selectedFile =
-                    null;
-
-
-                showError(
-                    "PDF okunamadı. Dosyanın geçerli olduğundan emin ol."
-                );
-            }
         }
     );
 
@@ -677,9 +893,6 @@
                 "Dönüştürülüyor...";
 
 
-            loading.style.display =
-                "block";
-
             progress.style.display =
                 "block";
 
@@ -706,19 +919,22 @@
 
 
                 for (
-                    let i = 1;
-                    i <= pdf.numPages;
-                    i++
+                    let pageNumber = 1;
+                    pageNumber <= pdf.numPages;
+                    pageNumber++
                 ) {
 
                     updateProgress(
-                        i,
-                        pdf.numPages
+                        pageNumber,
+                        pdf.numPages,
+                        `Sayfa ${pageNumber} okunuyor...`
                     );
 
 
                     const page =
-                        await pdf.getPage(i);
+                        await pdf.getPage(
+                            pageNumber
+                        );
 
 
                     const textContent =
@@ -726,92 +942,87 @@
 
 
                     const lines =
-                        groupTextItems(
+                        groupLines(
                             textContent.items
                         );
 
 
-                    children.push(
-                        new docx.Paragraph({
-                            children: [
-                                new docx.TextRun({
-                                    text:
-                                        `Sayfa ${i}`,
-                                    bold: true,
-                                    size: 24
-                                })
-                            ],
-                            spacing: {
-                                after: 200
+                    if (lines.length > 0) {
+
+                        lines.forEach(
+                            line => {
+
+                                children.push(
+                                    new docx.Paragraph({
+
+                                        children: [
+                                            new docx.TextRun({
+                                                text:
+                                                    line,
+                                                size:
+                                                    22
+                                            })
+                                        ],
+
+                                        spacing: {
+                                            after:
+                                                120,
+                                            line:
+                                                276
+                                        }
+
+                                    })
+                                );
+
                             }
-                        })
-                    );
+                        );
 
-
-                    if (lines.length === 0) {
+                    } else {
 
                         children.push(
                             new docx.Paragraph({
+
                                 children: [
                                     new docx.TextRun({
                                         text:
                                             "Bu sayfada çıkarılabilir metin bulunamadı."
                                     })
                                 ],
+
                                 spacing: {
-                                    after: 200
+                                    after:
+                                        200
                                 }
+
                             })
                         );
 
-                    } else {
-
-                        lines.forEach(line => {
-
-                            children.push(
-                                new docx.Paragraph({
-
-                                    children: [
-                                        new docx.TextRun({
-                                            text: line,
-                                            size: 22
-                                        })
-                                    ],
-
-                                    spacing: {
-                                        after: 100,
-                                        line: 276
-                                    }
-                                })
-                            );
-
-                        });
                     }
 
 
                     if (
-                        i < pdf.numPages
+                        pageNumber <
+                        pdf.numPages
                     ) {
 
                         children.push(
                             new docx.Paragraph({
-                                children: [
-                                    new docx.TextRun({
-                                        text: ""
-                                    })
-                                ],
-                                pageBreakBefore: true
+                                children: [],
+                                pageBreakBefore:
+                                    true
                             })
                         );
+
                     }
+
                 }
 
 
+                progressText.textContent =
+                    "Word dosyası oluşturuluyor...";
+
                 progressFill.style.width =
                     "100%";
-
-                progressText.textContent =
-                    "Word dosyası hazırlanıyor...";
 
 
                 const document =
@@ -821,24 +1032,45 @@
                             "Akifio",
 
                         title:
-                            "PDF to Word",
+                            selectedFile.name
+                                .replace(
+                                    /\.pdf$/i,
+                                    ""
+                                ),
 
                         description:
                             "Akifio PDF to Word dönüşümü",
 
                         sections: [
                             {
-                                properties: {},
+                                properties: {
+                                    page: {
+                                        margin: {
+                                            top:
+                                                1000,
+                                            right:
+                                                1000,
+                                            bottom:
+                                                1000,
+                                            left:
+                                                1000
+                                        }
+                                    }
+                                },
+
                                 children:
                                     children
                             }
                         ]
+
                     });
 
 
                 const blob =
                     await docx.Packer
-                        .toBlob(document);
+                        .toBlob(
+                            document
+                        );
 
 
                 if (downloadUrl) {
@@ -859,12 +1091,30 @@
                     downloadUrl;
 
 
-                pageCount.textContent =
+                const baseName =
+                    selectedFile.name
+                        .replace(
+                            /\.pdf$/i,
+                            ""
+                        );
+
+
+                downloadButton.download =
+                    `${baseName}.docx`;
+
+
+                resultPages.textContent =
                     pdf.numPages;
 
 
-                resultText.textContent =
-                    `Dönüştürme tamamlandı • ${formatSize(blob.size)}`;
+                resultStatus.textContent =
+                    "Dönüştürme tamamlandı.";
+
+
+                resultSize.textContent =
+                    formatSize(
+                        blob.size
+                    );
 
 
                 result.style.display =
@@ -881,19 +1131,16 @@
 
             } finally {
 
-                loading.style.display =
-                    "none";
-
-                progress.style.display =
-                    "none";
-
-
                 convertButton.disabled =
                     false;
 
                 convertButton.textContent =
                     "Word'e Dönüştür";
+
+                progress.style.display =
+                    "none";
             }
+
         }
     );
 
@@ -908,6 +1155,7 @@
                     downloadUrl
                 );
             }
+
         }
     );
 
