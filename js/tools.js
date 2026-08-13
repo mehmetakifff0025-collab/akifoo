@@ -119,7 +119,7 @@ const AKIFIO_TOOLS = [
         category: "PDF Araçları",
         icon: "▤",
         url: "tools/pdf-to-word.html",
-        active: false
+        active: true
     },
 
 
