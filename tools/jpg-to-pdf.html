@@ -1,1 +1,329 @@
+{`<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <title>JPG → PDF - Akifio</title>
+
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f7f8fc;
+            color: #111827;
+        }
+
+        .container {
+            width: min(900px, calc(100% - 32px));
+            margin: 50px auto;
+        }
+
+        .back {
+            display: inline-block;
+            margin-bottom: 24px;
+            color: #5b5cf0;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .card {
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 18px;
+            padding: 32px;
+            box-shadow: 0 10px 30px rgba(17,24,39,.06);
+        }
+
+        h1 {
+            margin: 0 0 10px;
+            font-size: 32px;
+        }
+
+        .description {
+            color: #6b7280;
+            margin-bottom: 28px;
+            line-height: 1.6;
+        }
+
+        .upload {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 180px;
+            border: 2px dashed #d1d5db;
+            border-radius: 14px;
+            cursor: pointer;
+            text-align: center;
+            padding: 25px;
+        }
+
+        .upload:hover {
+            border-color: #5b5cf0;
+            background: #f8f8ff;
+        }
+
+        .upload strong {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 17px;
+        }
+
+        .upload span {
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        #fileInput { display: none; }
+
+        .file-list {
+            display: none;
+            margin-top: 24px;
+        }
+
+        .file-item {
+            padding: 10px 12px;
+            background: #f3f4f6;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .button {
+            display: none;
+            width: 100%;
+            margin-top: 24px;
+            padding: 14px;
+            border: 0;
+            border-radius: 10px;
+            background: #5b5cf0;
+            color: white;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .button:hover { background: #494ad8; }
+
+        .button:disabled {
+            opacity: .5;
+            cursor: not-allowed;
+        }
+
+        .error {
+            display: none;
+            margin-top: 20px;
+            padding: 12px 15px;
+            border-radius: 10px;
+            background: #fef2f2;
+            color: #b91c1c;
+            font-size: 14px;
+        }
+
+        @media (max-width: 600px) {
+            .container { margin: 25px auto; }
+            .card { padding: 22px; }
+            h1 { font-size: 27px; }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <a href="../index.html" class="back">← Akifio ana sayfa</a>
+
+    <div class="card">
+
+        <h1>JPG → PDF</h1>
+
+        <p class="description">
+            Bir veya birden fazla JPG görselini tek bir PDF dosyasına dönüştür.
+            İşlem doğrudan tarayıcında gerçekleşir.
+        </p>
+
+        <label class="upload" for="fileInput">
+            <div>
+                <strong>JPG görsellerini seç</strong>
+                <span>Birden fazla görsel seçebilirsin</span>
+            </div>
+        </label>
+
+        <input
+            id="fileInput"
+            type="file"
+            accept="image/jpeg"
+            multiple
+        >
+
+        <div id="fileList" class="file-list"></div>
+
+        <button id="convertButton" class="button">
+            PDF Oluştur
+        </button>
+
+        <div id="error" class="error"></div>
+
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+
+<script>
+
+const fileInput = document.getElementById("fileInput");
+const fileList = document.getElementById("fileList");
+const convertButton = document.getElementById("convertButton");
+const errorBox = document.getElementById("error");
+
+let selectedFiles = [];
+
+function showError(message) {
+    errorBox.textContent = message;
+    errorBox.style.display = "block";
+}
+
+function hideError() {
+    errorBox.textContent = "";
+    errorBox.style.display = "none";
+}
+
+fileInput.addEventListener("change", () => {
+
+    hideError();
+
+    selectedFiles = Array.from(fileInput.files);
+
+    if (!selectedFiles.length) return;
+
+    const invalid = selectedFiles.some(file => file.type !== "image/jpeg");
+
+    if (invalid) {
+        showError("Sadece JPG/JPEG dosyaları seç.");
+        selectedFiles = [];
+        return;
+    }
+
+    fileList.innerHTML = "";
+
+    selectedFiles.forEach((file, index) => {
+
+        const item = document.createElement("div");
+
+        item.className = "file-item";
+
+        item.textContent = `${index + 1}. ${file.name}`;
+
+        fileList.appendChild(item);
+
+    });
+
+    fileList.style.display = "block";
+    convertButton.style.display = "block";
+
+});
+
+function readImage(file) {
+
+    return new Promise((resolve, reject) => {
+
+        const reader = new FileReader();
+
+        reader.onload = () => {
+
+            const image = new Image();
+
+            image.onload = () => resolve(image);
+
+            image.onerror = reject;
+
+            image.src = reader.result;
+
+        };
+
+        reader.onerror = reject;
+
+        reader.readAsDataURL(file);
+
+    });
+
+}
+
+convertButton.addEventListener("click", async () => {
+
+    hideError();
+
+    if (!selectedFiles.length) {
+        showError("Önce JPG görsellerini seç.");
+        return;
+    }
+
+    convertButton.disabled = true;
+    convertButton.textContent = "PDF oluşturuluyor...";
+
+    try {
+
+        const { jsPDF } = window.jspdf;
+
+        const pdf = new jsPDF({
+            orientation: "portrait",
+            unit: "mm",
+            format: "a4"
+        });
+
+        for (let i = 0; i < selectedFiles.length; i++) {
+
+            const image = await readImage(selectedFiles[i]);
+
+            if (i > 0) {
+                pdf.addPage();
+            }
+
+            const pageWidth = 210;
+            const pageHeight = 297;
+
+            const ratio = Math.min(
+                pageWidth / image.width,
+                pageHeight / image.height
+            );
+
+            const width = image.width * ratio;
+            const height = image.height * ratio;
+
+            const x = (pageWidth - width) / 2;
+            const y = (pageHeight - height) / 2;
+
+            pdf.addImage(
+                image,
+                "JPEG",
+                x,
+                y,
+                width,
+                height
+            );
+
+        }
+
+        pdf.save("akifio-jpg-to-pdf.pdf");
+
+    } catch (error) {
+
+        showError("PDF oluşturulurken bir hata oluştu.");
+
+    } finally {
+
+        convertButton.disabled = false;
+        convertButton.textContent = "PDF Oluştur";
+
+    }
+
+});
+
+</script>
+
+</body>
+</html>`}
