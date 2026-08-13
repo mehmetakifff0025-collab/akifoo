@@ -40,7 +40,7 @@
             border: 1px solid #e5e7eb;
             border-radius: 20px;
             padding: 34px;
-            box-shadow: 0 10px 35px rgba(17, 24, 39, .06);
+            box-shadow: 0 10px 35px rgba(17, 24, 39, 0.06);
         }
 
         h1 {
@@ -64,7 +64,7 @@
             justify-content: center;
             text-align: center;
             cursor: pointer;
-            transition: .2s;
+            transition: 0.2s;
         }
 
         .upload:hover,
@@ -74,7 +74,7 @@
         }
 
         .upload-icon {
-            font-size: 38px;
+            font-size: 40px;
             margin-bottom: 10px;
         }
 
@@ -156,7 +156,7 @@
         }
 
         .button:disabled {
-            opacity: .55;
+            opacity: 0.55;
             cursor: not-allowed;
         }
 
@@ -177,7 +177,7 @@
             width: 0%;
             height: 100%;
             background: #5b5cf0;
-            transition: width .2s;
+            transition: width 0.2s;
         }
 
         .progress-text {
@@ -265,10 +265,14 @@
 
         <p class="description">
             PDF dosyanı düzenlenebilir Word belgesine dönüştür.
-            Akifio PDF'ni analiz ederek mümkün olan en iyi dönüşümü yapmaya çalışır.
+            Metin düzenini mümkün olduğunca korumaya çalışır.
         </p>
 
-        <label class="upload" id="uploadArea" for="fileInput">
+        <label
+            class="upload"
+            id="uploadArea"
+            for="fileInput"
+        >
 
             <div>
 
@@ -294,7 +298,10 @@
             accept="application/pdf"
         >
 
-        <div class="file-info" id="fileInfo">
+        <div
+            class="file-info"
+            id="fileInfo"
+        >
 
             <div
                 class="file-name"
@@ -338,10 +345,9 @@
             </button>
 
             <p class="warning">
-                Dönüşüm tarayıcında gerçekleştirilir.
-                Metin tabanlı PDF'lerde düzenlenebilirlik daha yüksek olur.
-                Çok karmaşık tasarımlar, tablolar veya taranmış belgelerde
-                PDF görünümü birebir korunmayabilir.
+                İşlem tarayıcında gerçekleştirilir.
+                Karmaşık tablolar, sütunlar ve taranmış belgelerde
+                sonuç PDF'nin yapısına bağlı olarak değişebilir.
             </p>
 
         </div>
@@ -479,10 +485,6 @@
 
     let downloadUrl = null;
 
-    let pdfPageCount = 0;
-
-    let detectedTextPages = 0;
-
 
     function showError(message) {
 
@@ -523,37 +525,34 @@
     }
 
 
-    function updateProgress(current, total, text) {
+    function setProgress(
+        current,
+        total,
+        message
+    ) {
 
-        const percentage =
+        const percent =
             Math.round(
                 (current / total) * 100
             );
 
         progressFill.style.width =
-            percentage + "%";
+            percent + "%";
 
         progressText.textContent =
-            text ||
+            message ||
             `${current} / ${total}`;
     }
 
 
-    function cleanText(text) {
+    /*
+     * PDF'deki kelimeleri gerçek
+     * konumlarına göre satırlara ayırır.
+     */
 
-        return text
-            .replace(/\s+/g, " ")
-            .trim();
-    }
+    function buildLines(items) {
 
-
-    function groupLines(items) {
-
-        const groups = [];
-
-        let current = [];
-
-        let currentY = null;
+        const words = [];
 
 
         items.forEach(item => {
@@ -566,57 +565,429 @@
             }
 
 
+            const transform =
+                item.transform;
+
+
+            const x =
+                transform[4];
+
+
             const y =
-                item.transform
-                    ? item.transform[5]
-                    : 0;
+                transform[5];
 
 
-            if (
-                currentY === null ||
-                Math.abs(y - currentY) < 5
-            ) {
-
-                current.push(item);
-
-            } else {
-
-                if (current.length) {
-                    groups.push(current);
-                }
-
-                current = [item];
-            }
+            const fontHeight =
+                Math.abs(
+                    transform[3]
+                );
 
 
-            currentY = y;
+            const width =
+                item.width ||
+                0;
+
+
+            words.push({
+
+                text:
+                    item.str,
+
+                x:
+                    x,
+
+                y:
+                    y,
+
+                width:
+                    width,
+
+                height:
+                    fontHeight,
+
+                fontSize:
+                    fontHeight
+
+            });
 
         });
 
 
-        if (current.length) {
-            groups.push(current);
+        /*
+         * Y koordinatına göre satırları oluştur.
+         */
+
+        words.sort(
+            (a, b) => {
+
+                const yDifference =
+                    b.y - a.y;
+
+
+                if (
+                    Math.abs(yDifference) > 4
+                ) {
+                    return yDifference;
+                }
+
+
+                return a.x - b.x;
+            }
+        );
+
+
+        const lines = [];
+
+
+        words.forEach(word => {
+
+            let line =
+                null;
+
+
+            for (
+                let i = 0;
+                i < lines.length;
+                i++
+            ) {
+
+                const candidate =
+                    lines[i];
+
+
+                if (
+                    Math.abs(
+                        candidate.y -
+                        word.y
+                    ) <=
+                    Math.max(
+                        4,
+                        word.height * 0.45
+                    )
+                ) {
+
+                    line =
+                        candidate;
+
+                    break;
+                }
+
+            }
+
+
+            if (!line) {
+
+                line = {
+
+                    y:
+                        word.y,
+
+                    words:
+                        [],
+
+                    fontSizes:
+                        []
+
+                };
+
+
+                lines.push(line);
+            }
+
+
+            line.words.push(word);
+
+            line.fontSizes.push(
+                word.fontSize
+            );
+
+        });
+
+
+        /*
+         * Her satırdaki kelimeleri
+         * soldan sağa sırala.
+         */
+
+        lines.forEach(line => {
+
+            line.words.sort(
+                (a, b) =>
+                    a.x - b.x
+            );
+
+            line.averageFontSize =
+                line.fontSizes.reduce(
+                    (a, b) =>
+                        a + b,
+                    0
+                ) /
+                line.fontSizes.length;
+
+        });
+
+
+        /*
+         * Satırları yukarıdan aşağıya sırala.
+         */
+
+        lines.sort(
+            (a, b) =>
+                b.y - a.y
+        );
+
+
+        return lines;
+    }
+
+
+    /*
+     * Kelimeler arasındaki gerçek
+     * yatay boşluğu tahmin eder.
+     */
+
+    function buildLineText(line) {
+
+        let output = "";
+
+
+        line.words.forEach(
+            (word, index) => {
+
+                if (index === 0) {
+
+                    output +=
+                        word.text;
+
+                    return;
+                }
+
+
+                const previous =
+                    line.words[
+                        index - 1
+                    ];
+
+
+                const previousEnd =
+                    previous.x +
+                    previous.width;
+
+
+                const gap =
+                    word.x -
+                    previousEnd;
+
+
+                /*
+                 * PDF'deki boşluğa göre
+                 * kelimeleri ayır.
+                 */
+
+                if (
+                    gap >
+                    Math.max(
+                        1.5,
+                        line.averageFontSize *
+                        0.12
+                    )
+                ) {
+
+                    output += " ";
+
+                }
+
+
+                output +=
+                    word.text;
+
+            }
+        );
+
+
+        return output
+            .replace(
+                /\s+/g,
+                " "
+            )
+            .trim();
+    }
+
+
+    /*
+     * Satırların paragraf olup
+     * olmadığını tahmin eder.
+     */
+
+    function analyzeParagraphs(lines) {
+
+        const paragraphs = [];
+
+
+        let current =
+            null;
+
+
+        for (
+            let i = 0;
+            i < lines.length;
+            i++
+        ) {
+
+            const line =
+                lines[i];
+
+
+            const text =
+                buildLineText(line);
+
+
+            if (!text) {
+                continue;
+            }
+
+
+            const next =
+                lines[i + 1];
+
+
+            let gap = 0;
+
+
+            if (next) {
+
+                gap =
+                    Math.abs(
+                        line.y -
+                        next.y
+                    );
+
+            }
+
+
+            const normalLineHeight =
+                Math.max(
+                    8,
+                    line.averageFontSize *
+                    1.25
+                );
+
+
+            const largeGap =
+                gap >
+                normalLineHeight *
+                1.65;
+
+
+            const isLargeText =
+                line.averageFontSize >
+                14;
+
+
+            if (!current) {
+
+                current = {
+
+                    text:
+                        text,
+
+                    fontSize:
+                        line.averageFontSize,
+
+                    heading:
+                        isLargeText
+
+                };
+
+                continue;
+            }
+
+
+            /*
+             * Büyük boşluk varsa
+             * yeni paragraf başlat.
+             */
+
+            if (largeGap) {
+
+                paragraphs.push(
+                    current
+                );
+
+
+                current = {
+
+                    text:
+                        text,
+
+                    fontSize:
+                        line.averageFontSize,
+
+                    heading:
+                        isLargeText
+
+                };
+
+
+                continue;
+            }
+
+
+            /*
+             * Büyük yazı boyutu
+             * yeni başlık olabilir.
+             */
+
+            if (
+                isLargeText &&
+                line.averageFontSize >
+                current.fontSize * 1.15
+            ) {
+
+                paragraphs.push(
+                    current
+                );
+
+
+                current = {
+
+                    text:
+                        text,
+
+                    fontSize:
+                        line.averageFontSize,
+
+                    heading:
+                        true
+
+                };
+
+
+                continue;
+            }
+
+
+            /*
+             * Normal satırları
+             * aynı paragrafta birleştir.
+             */
+
+            current.text +=
+                " " +
+                text;
+
         }
 
 
-        return groups
-            .map(line => {
+        if (current) {
 
-                line.sort(
-                    (a, b) =>
-                        a.transform[4] -
-                        b.transform[4]
-                );
+            paragraphs.push(
+                current
+            );
+        }
 
 
-                return cleanText(
-                    line
-                        .map(item => item.str)
-                        .join(" ")
-                );
-
-            })
-            .filter(Boolean);
+        return paragraphs;
     }
 
 
@@ -629,21 +1000,15 @@
         const pdf =
             await pdfjsLib
                 .getDocument({
-                    data: bytes
+                    data:
+                        bytes
                 })
                 .promise;
 
 
-        pdfPageCount =
-            pdf.numPages;
+        let textPages = 0;
 
-
-        let pagesWithText = 0;
-
-        let totalCharacters = 0;
-
-
-        const checkPages =
+        const check =
             Math.min(
                 pdf.numPages,
                 5
@@ -652,7 +1017,7 @@
 
         for (
             let i = 1;
-            i <= checkPages;
+            i <= check;
             i++
         ) {
 
@@ -666,41 +1031,44 @@
 
             const text =
                 content.items
-                    .map(item => item.str)
-                    .join(" ")
+                    .map(
+                        item =>
+                            item.str
+                    )
+                    .join("")
                     .trim();
 
 
-            if (text.length > 20) {
+            if (
+                text.length > 10
+            ) {
 
-                pagesWithText++;
+                textPages++;
 
-                totalCharacters +=
-                    text.length;
             }
+
         }
 
 
-        detectedTextPages =
-            pagesWithText;
-
-
-        if (pagesWithText === 0) {
-
-            analysisText.textContent =
-                "Bu PDF'de çıkarılabilir metin bulunamadı. Belge büyük ihtimalle taranmış veya görüntü tabanlı. Mevcut tarayıcı dönüşümü yalnızca metin içeren PDF'lerde düzenlenebilir Word oluşturabilir.";
-
-        } else if (
-            pagesWithText === checkPages
+        if (
+            textPages === 0
         ) {
 
             analysisText.textContent =
-                "PDF metin ağırlıklı görünüyor. Metinler Word belgesine düzenlenebilir şekilde aktarılacak.";
+                "Bu PDF'de çıkarılabilir metin bulunamadı. Büyük ihtimalle taranmış veya görüntü tabanlı bir PDF. Bu sürüm düzenlenebilir metin için metin katmanı bulunan PDF'lere odaklanır.";
+
+        } else if (
+            textPages === check
+        ) {
+
+            analysisText.textContent =
+                "Metin tabanlı PDF algılandı. Metinlerin konumları analiz edilerek Word belgesi oluşturulacak.";
 
         } else {
 
             analysisText.textContent =
-                "PDF kısmen metin içeriyor. Metin bulunan bölümler Word'e aktarılacak; bazı görsel veya taranmış bölümler düzenlenebilir olmayabilir.";
+                "PDF'nin bazı sayfalarında metin bulundu. Metin içeren bölümler mümkün olduğunca düzenlenebilir şekilde aktarılacak.";
+
         }
 
 
@@ -708,7 +1076,7 @@
     }
 
 
-    async function selectFile(file) {
+    async function loadFile(file) {
 
         hideError();
 
@@ -716,8 +1084,10 @@
         result.style.display =
             "none";
 
+
         analysis.style.display =
             "none";
+
 
         controls.style.display =
             "none";
@@ -767,7 +1137,9 @@
 
 
             const pdf =
-                await analyzePDF(file);
+                await analyzePDF(
+                    file
+                );
 
 
             selectedFile =
@@ -790,6 +1162,7 @@
 
             console.error(error);
 
+
             selectedFile =
                 null;
 
@@ -798,6 +1171,7 @@
                 "PDF okunamadı. Dosyanın geçerli olduğundan emin ol."
             );
         }
+
     }
 
 
@@ -805,7 +1179,7 @@
         "change",
         () => {
 
-            selectFile(
+            loadFile(
                 fileInput.files[0]
             );
 
@@ -813,57 +1187,48 @@
     );
 
 
-    [
-        "dragenter",
-        "dragover"
-    ].forEach(eventName => {
+    uploadArea.addEventListener(
+        "dragover",
+        event => {
 
-        uploadArea.addEventListener(
-            eventName,
-            event => {
+            event.preventDefault();
 
-                event.preventDefault();
+            uploadArea.classList.add(
+                "dragover"
+            );
 
-                uploadArea.classList.add(
-                    "dragover"
-                );
-
-            }
-        );
-
-    });
+        }
+    );
 
 
-    [
+    uploadArea.addEventListener(
         "dragleave",
-        "drop"
-    ].forEach(eventName => {
+        () => {
 
-        uploadArea.addEventListener(
-            eventName,
-            event => {
+            uploadArea.classList.remove(
+                "dragover"
+            );
 
-                event.preventDefault();
-
-                uploadArea.classList.remove(
-                    "dragover"
-                );
-
-            }
-        );
-
-    });
+        }
+    );
 
 
     uploadArea.addEventListener(
         "drop",
         event => {
 
+            event.preventDefault();
+
+            uploadArea.classList.remove(
+                "dragover"
+            );
+
+
             const file =
                 event.dataTransfer.files[0];
 
 
-            selectFile(file);
+            loadFile(file);
 
         }
     );
@@ -889,6 +1254,7 @@
             convertButton.disabled =
                 true;
 
+
             convertButton.textContent =
                 "Dönüştürülüyor...";
 
@@ -910,24 +1276,27 @@
                 const pdf =
                     await pdfjsLib
                         .getDocument({
-                            data: bytes
+                            data:
+                                bytes
                         })
                         .promise;
 
 
-                const children = [];
+                const children =
+                    [];
 
 
                 for (
                     let pageNumber = 1;
-                    pageNumber <= pdf.numPages;
+                    pageNumber <=
+                    pdf.numPages;
                     pageNumber++
                 ) {
 
-                    updateProgress(
+                    setProgress(
                         pageNumber,
                         pdf.numPages,
-                        `Sayfa ${pageNumber} okunuyor...`
+                        `Sayfa ${pageNumber} analiz ediliyor...`
                     );
 
 
@@ -937,68 +1306,136 @@
                         );
 
 
-                    const textContent =
+                    const content =
                         await page.getTextContent();
 
 
                     const lines =
-                        groupLines(
-                            textContent.items
+                        buildLines(
+                            content.items
                         );
 
 
-                    if (lines.length > 0) {
+                    const paragraphs =
+                        analyzeParagraphs(
+                            lines
+                        );
 
-                        lines.forEach(
-                            line => {
+
+                    /*
+                     * Sayfadaki metin yoksa
+                     * bilgi ver.
+                     */
+
+                    if (
+                        paragraphs.length === 0
+                    ) {
+
+                        children.push(
+
+                            new docx.Paragraph({
+
+                                children: [
+
+                                    new docx.TextRun({
+
+                                        text:
+                                            "Bu sayfada çıkarılabilir metin bulunamadı.",
+
+                                        italics:
+                                            true,
+
+                                        color:
+                                            "666666"
+
+                                    })
+
+                                ]
+
+                            })
+
+                        );
+
+                    } else {
+
+                        paragraphs.forEach(
+                            paragraph => {
+
+                                let size =
+                                    Math.round(
+                                        paragraph.fontSize *
+                                        1.35
+                                    );
+
+
+                                /*
+                                 * Word font boyutunu
+                                 * makul aralıkta tut.
+                                 */
+
+                                size =
+                                    Math.max(
+                                        18,
+                                        Math.min(
+                                            36,
+                                            size
+                                        )
+                                    );
+
+
+                                const isHeading =
+                                    paragraph.heading &&
+                                    paragraph.fontSize >
+                                    14;
+
 
                                 children.push(
+
                                     new docx.Paragraph({
 
                                         children: [
+
                                             new docx.TextRun({
+
                                                 text:
-                                                    line,
+                                                    paragraph.text,
+
                                                 size:
-                                                    22
+                                                    size,
+
+                                                bold:
+                                                    isHeading
+
                                             })
+
                                         ],
 
                                         spacing: {
+
                                             after:
-                                                120,
+                                                isHeading
+                                                    ? 180
+                                                    : 100,
+
                                             line:
                                                 276
+
                                         }
 
                                     })
+
                                 );
 
                             }
                         );
 
-                    } else {
-
-                        children.push(
-                            new docx.Paragraph({
-
-                                children: [
-                                    new docx.TextRun({
-                                        text:
-                                            "Bu sayfada çıkarılabilir metin bulunamadı."
-                                    })
-                                ],
-
-                                spacing: {
-                                    after:
-                                        200
-                                }
-
-                            })
-                        );
-
                     }
 
+
+                    /*
+                     * Sayfalar arasında Word
+                     * sayfa sonu oluştur.
+                     */
 
                     if (
                         pageNumber <
@@ -1006,11 +1443,16 @@
                     ) {
 
                         children.push(
+
                             new docx.Paragraph({
+
                                 children: [],
+
                                 pageBreakBefore:
                                     true
+
                             })
+
                         );
 
                     }
@@ -1018,11 +1460,12 @@
                 }
 
 
-                progressText.textContent =
-                    "Word dosyası oluşturuluyor...";
-
                 progressFill.style.width =
                     "100%";
+
+
+                progressText.textContent =
+                    "Word dosyası oluşturuluyor...";
 
 
                 const document =
@@ -1039,28 +1482,41 @@
                                 ),
 
                         description:
-                            "Akifio PDF to Word dönüşümü",
+                            "Akifio PDF to Word",
 
                         sections: [
+
                             {
+
                                 properties: {
+
                                     page: {
+
                                         margin: {
+
                                             top:
-                                                1000,
+                                                900,
+
                                             right:
-                                                1000,
+                                                900,
+
                                             bottom:
-                                                1000,
+                                                900,
+
                                             left:
-                                                1000
+                                                900
+
                                         }
+
                                     }
+
                                 },
 
                                 children:
                                     children
+
                             }
+
                         ]
 
                     });
@@ -1078,6 +1534,7 @@
                     URL.revokeObjectURL(
                         downloadUrl
                     );
+
                 }
 
 
@@ -1125,6 +1582,7 @@
 
                 console.error(error);
 
+
                 showError(
                     "PDF Word'e dönüştürülemedi. Dosyanın geçerli olduğundan emin ol."
                 );
@@ -1134,11 +1592,14 @@
                 convertButton.disabled =
                     false;
 
+
                 convertButton.textContent =
                     "Word'e Dönüştür";
 
+
                 progress.style.display =
                     "none";
+
             }
 
         }
@@ -1154,6 +1615,7 @@
                 URL.revokeObjectURL(
                     downloadUrl
                 );
+
             }
 
         }
