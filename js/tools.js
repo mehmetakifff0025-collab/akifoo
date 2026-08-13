@@ -101,7 +101,7 @@ const AKIFIO_TOOLS = [
         category: "PDF Araçları",
         icon: "▤",
         url: "tools/pdf-compress.html",
-        active: false
+        active: true
     },
 
     {
