@@ -1,8 +1,8 @@
 const AKIFIO_TOOLS = [
 
-    // =========================
+    // ==========================================
     // QR ARAÇLARI
-    // =========================
+    // ==========================================
 
     {
         name: "QR Kod Oluştur",
@@ -23,9 +23,9 @@ const AKIFIO_TOOLS = [
     },
 
 
-    // =========================
+    // ==========================================
     // GÖRSEL ARAÇLARI
-    // =========================
+    // ==========================================
 
     {
         name: "Görsel Sıkıştır",
@@ -42,22 +42,31 @@ const AKIFIO_TOOLS = [
         category: "Görsel Araçları",
         icon: "◇",
         url: "tools/image-resize.html",
-        active: true
+        active: false
     },
 
     {
-    name: "JPG → PDF",
-    description: "JPG görsellerini kolayca PDF dosyasına dönüştür.",
-    category: "PDF Araçları",
-    icon: "▤",
-    url: "tools/jpg-to-pdf.html",
-    active: true
-},
+        name: "Görsel Dönüştür",
+        description: "JPG, PNG ve diğer görsel formatları arasında dönüştür.",
+        category: "Görsel Araçları",
+        icon: "◈",
+        url: "tools/image-convert.html",
+        active: false
+    },
+
+    {
+        name: "Arka Plan Kaldır",
+        description: "Görsellerdeki arka planı kaldır.",
+        category: "Görsel Araçları",
+        icon: "✦",
+        url: "tools/remove-background.html",
+        active: false
+    },
 
 
-    // =========================
+    // ==========================================
     // PDF ARAÇLARI
-    // =========================
+    // ==========================================
 
     {
         name: "JPG → PDF",
@@ -114,9 +123,9 @@ const AKIFIO_TOOLS = [
     },
 
 
-    // =========================
+    // ==========================================
     // DÖNÜŞTÜRÜCÜLER
-    // =========================
+    // ==========================================
 
     {
         name: "Word → PDF",
@@ -136,14 +145,10 @@ const AKIFIO_TOOLS = [
         active: false
     },
 
-    {
-        name: "Arka Plan Kaldır",
-        description: "Görsellerdeki arka planı kaldır.",
-        category: "Görsel Araçları",
-        icon: "✦",
-        url: "tools/remove-background.html",
-        active: false
-    },
+
+    // ==========================================
+    // GELİŞTİRİCİ ARAÇLARI
+    // ==========================================
 
     {
         name: "JSON Formatter",
