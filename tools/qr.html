@@ -1,1 +1,446 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <title>QR Kod Oluştur - Akifio</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f7f8fc;
+            color: #111827;
+        }
+
+        .container {
+            width: min(850px, calc(100% - 32px));
+            margin: 50px auto;
+        }
+
+        .back {
+            display: inline-block;
+            margin-bottom: 24px;
+            color: #5b5cf0;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .back:hover {
+            text-decoration: underline;
+        }
+
+        .card {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 18px;
+            padding: 32px;
+            box-shadow: 0 10px 30px rgba(17, 24, 39, 0.06);
+        }
+
+        h1 {
+            margin: 0 0 10px;
+            font-size: 32px;
+        }
+
+        .description {
+            margin: 0 0 28px;
+            color: #6b7280;
+            line-height: 1.6;
+        }
+
+        .field {
+            margin-bottom: 20px;
+        }
+
+        .field label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 140px;
+            padding: 14px;
+            border: 1px solid #d1d5db;
+            border-radius: 10px;
+            resize: vertical;
+            outline: none;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 15px;
+            line-height: 1.5;
+        }
+
+        textarea:focus {
+            border-color: #5b5cf0;
+        }
+
+        .button {
+            width: 100%;
+            padding: 14px 20px;
+            border: 0;
+            border-radius: 10px;
+            background: #5b5cf0;
+            color: #ffffff;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .button:hover {
+            background: #494ad8;
+        }
+
+        .result {
+            display: none;
+            margin-top: 30px;
+            padding: 25px;
+            border-radius: 14px;
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            text-align: center;
+        }
+
+        .result h2 {
+            margin: 0 0 20px;
+            font-size: 20px;
+        }
+
+        #qrCanvas {
+            display: block;
+            width: 260px;
+            height: 260px;
+            max-width: 100%;
+            margin: 0 auto 20px;
+            background: #ffffff;
+            border-radius: 8px;
+        }
+
+        .download {
+            display: inline-block;
+            padding: 13px 22px;
+            border-radius: 10px;
+            background: #111827;
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .download:hover {
+            background: #1f2937;
+        }
+
+        .error {
+            display: none;
+            margin-top: 20px;
+            padding: 12px 15px;
+            border-radius: 10px;
+            background: #fef2f2;
+            color: #b91c1c;
+            font-size: 14px;
+        }
+
+        .info {
+            margin-top: 18px;
+            color: #6b7280;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                margin: 25px auto;
+            }
+
+            .card {
+                padding: 22px;
+            }
+
+            h1 {
+                font-size: 27px;
+            }
+
+            #qrCanvas {
+                width: 220px;
+                height: 220px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <a href="../index.html" class="back">
+            ← Akifio ana sayfa
+        </a>
+
+        <div class="card">
+
+            <h1>QR Kod Oluştur</h1>
+
+            <p class="description">
+                Metin, bağlantı veya başka bir bilgiyi kolayca QR koda dönüştür.
+            </p>
+
+            <div class="field">
+
+                <label for="qrText">
+                    Metin veya bağlantı
+                </label>
+
+                <textarea
+                    id="qrText"
+                    placeholder="Örneğin: https://akifio.com"
+                    autocomplete="off"
+                ></textarea>
+
+            </div>
+
+            <button
+                type="button"
+                class="button"
+                id="generateButton"
+            >
+                QR Kod Oluştur
+            </button>
+
+            <div
+                class="error"
+                id="error"
+            ></div>
+
+            <div
+                class="result"
+                id="result"
+            >
+
+                <h2>QR Kodun Hazır</h2>
+
+                <canvas
+                    id="qrCanvas"
+                    width="500"
+                    height="500"
+                ></canvas>
+
+                <a
+                    id="downloadButton"
+                    class="download"
+                    download="akifio-qr-kod.png"
+                >
+                    QR Kodu İndir
+                </a>
+
+                <p class="info">
+                    QR kod PNG formatında indirilir.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+        const qrText = document.getElementById("qrText");
+        const generateButton =
+            document.getElementById("generateButton");
+
+        const result =
+            document.getElementById("result");
+
+        const qrCanvas =
+            document.getElementById("qrCanvas");
+
+        const downloadButton =
+            document.getElementById("downloadButton");
+
+        const errorBox =
+            document.getElementById("error");
+
+
+        function showError(message) {
+            errorBox.textContent = message;
+            errorBox.style.display = "block";
+        }
+
+
+        function hideError() {
+            errorBox.textContent = "";
+            errorBox.style.display = "none";
+        }
+
+
+        function createQRCode(text) {
+
+            const size = 500;
+
+            qrCanvas.width = size;
+            qrCanvas.height = size;
+
+            const context =
+                qrCanvas.getContext("2d");
+
+            if (!context) {
+                throw new Error(
+                    "Tarayıcı canvas özelliğini desteklemiyor."
+                );
+            }
+
+
+            context.fillStyle = "#ffffff";
+            context.fillRect(
+                0,
+                0,
+                size,
+                size
+            );
+
+
+            /*
+             * QR kod oluşturma işlemi için
+             * tarayıcıda çalışan QR kütüphanesi
+             * aşağıdaki script ile yüklenir.
+             */
+
+            if (
+                typeof QRCode === "undefined"
+            ) {
+                throw new Error(
+                    "QR kod kütüphanesi yüklenemedi."
+                );
+            }
+
+
+            new QRCode(qrCanvas, {
+                text: text,
+                width: size,
+                height: size,
+                colorDark: "#000000",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
+            });
+
+
+            setTimeout(() => {
+
+                const generatedCanvas =
+                    qrCanvas.parentElement
+                        .querySelector("canvas");
+
+                if (generatedCanvas) {
+
+                    const dataUrl =
+                        generatedCanvas.toDataURL(
+                            "image/png"
+                        );
+
+                    downloadButton.href =
+                        dataUrl;
+
+                }
+
+            }, 300);
+
+        }
+
+
+        generateButton.addEventListener(
+            "click",
+            () => {
+
+                hideError();
+
+                const text =
+                    qrText.value.trim();
+
+
+                if (!text) {
+
+                    showError(
+                        "Lütfen QR koduna dönüştürmek istediğin metni veya bağlantıyı yaz."
+                    );
+
+                    qrText.focus();
+
+                    return;
+                }
+
+
+                try {
+
+                    generateButton.disabled = true;
+                    generateButton.textContent =
+                        "Oluşturuluyor...";
+
+
+                    createQRCode(text);
+
+
+                    result.style.display =
+                        "block";
+
+
+                    setTimeout(() => {
+
+                        generateButton.disabled =
+                            false;
+
+                        generateButton.textContent =
+                            "QR Kod Oluştur";
+
+                    }, 500);
+
+                } catch (error) {
+
+                    generateButton.disabled =
+                        false;
+
+                    generateButton.textContent =
+                        "QR Kod Oluştur";
+
+                    showError(
+                        "QR kod oluşturulamadı. Sayfayı yenileyip tekrar dene."
+                    );
+
+                    console.error(error);
+                }
+
+            }
+        );
+
+
+        qrText.addEventListener(
+            "keydown",
+            (event) => {
+
+                if (
+                    event.ctrlKey &&
+                    event.key === "Enter"
+                ) {
+                    generateButton.click();
+                }
+
+            }
+        );
+    </script>
+
+
+    <!-- QRCode kütüphanesi -->
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"
+        integrity="sha512-CNg8YyH1Zk+4mZ3rjJ7s0J5X6X6M5w6c5F0G6h8X9wM6H7r5X5M0K7R8Y5X5M0K7R8Y5X5M0K7R8Y5X5M0K7R8Y="
+        crossorigin="anonymous"
+        referrerpolicy="no-referrer"
+    ></script>
+
+</body>
+</html>
