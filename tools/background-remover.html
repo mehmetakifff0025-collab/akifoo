@@ -1,1 +1,413 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <title>Akifio - Arka Plan Kaldır</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f7f8fc;
+            color: #111827;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 50px 20px;
+        }
+
+        h1 {
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #6b7280;
+            margin-bottom: 35px;
+        }
+
+        .box {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 18px;
+            padding: 30px;
+            text-align: center;
+        }
+
+        input[type="file"] {
+            margin: 20px 0;
+        }
+
+        button {
+            padding: 12px 22px;
+            border: 0;
+            border-radius: 10px;
+            background: #5b5cf0;
+            color: white;
+            font-size: 15px;
+            cursor: pointer;
+        }
+
+        button:disabled {
+            opacity: .5;
+            cursor: not-allowed;
+        }
+
+        #status {
+            margin-top: 20px;
+            color: #6b7280;
+        }
+
+        #preview {
+            max-width: 100%;
+            margin-top: 25px;
+            border-radius: 12px;
+        }
+
+        #download {
+            display: none;
+            margin-top: 20px;
+            text-decoration: none;
+            background: #10b981;
+            color: white;
+            padding: 12px 22px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Arka Plan Kaldır</h1>
+
+    <p class="subtitle">
+        Fotoğrafındaki arka planı otomatik olarak kaldır.
+    </p>
+
+    <div class="box">
+
+        <input
+            type="file"
+            id="fileInput"
+            accept="image/*"
+        >
+
+        <br>
+
+        <button id="removeBtn" disabled>
+            Arka Planı Kaldır
+        </button>
+
+        <div id="status">
+            Model hazırlanıyor...
+        </div>
+
+        <img id="preview" alt="Sonuç">
+
+        <br>
+
+        <a id="download" download="akifio-background-removed.png">
+            PNG'yi İndir
+        </a>
+
+    </div>
+
+</div>
+
+<!-- ONNX Runtime Web -->
+<script src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.22.0/dist/ort.min.js"></script>
+
+<script>
+    const MODEL_URL =
+        "https://huggingface.co/Heliosoph/u2net-onnx/resolve/main/u2netp.onnx";
+
+    const fileInput = document.getElementById("fileInput");
+    const removeBtn = document.getElementById("removeBtn");
+    const status = document.getElementById("status");
+    const preview = document.getElementById("preview");
+    const download = document.getElementById("download");
+
+    let session = null;
+
+    async function loadModel() {
+
+        try {
+
+            status.textContent = "U²-Net modeli yükleniyor...";
+
+            ort.env.wasm.wasmPaths =
+                "https://cdn.jsdelivr.net/npm/onnxruntime-web@1.22.0/dist/";
+
+            session = await ort.InferenceSession.create(
+                MODEL_URL,
+                {
+                    executionProviders: ["wasm"]
+                }
+            );
+
+            status.textContent =
+                "Hazır. Bir fotoğraf seçebilirsin.";
+
+            removeBtn.disabled = false;
+
+        } catch (error) {
+
+            console.error(error);
+
+            status.textContent =
+                "Model yüklenemedi. Konsolu kontrol et.";
+
+        }
+    }
+
+    fileInput.addEventListener("change", () => {
+
+        const file = fileInput.files[0];
+
+        if (!file) return;
+
+        const url = URL.createObjectURL(file);
+
+        preview.src = url;
+
+        download.style.display = "none";
+    });
+
+
+    removeBtn.addEventListener("click", async () => {
+
+        const file = fileInput.files[0];
+
+        if (!file || !session) return;
+
+        try {
+
+            removeBtn.disabled = true;
+
+            status.textContent =
+                "Arka plan kaldırılıyor...";
+
+            const bitmap =
+                await createImageBitmap(file);
+
+            const canvas =
+                document.createElement("canvas");
+
+            canvas.width = 320;
+            canvas.height = 320;
+
+            const ctx =
+                canvas.getContext("2d");
+
+            ctx.drawImage(
+                bitmap,
+                0,
+                0,
+                320,
+                320
+            );
+
+            const imageData =
+                ctx.getImageData(
+                    0,
+                    0,
+                    320,
+                    320
+                );
+
+            const input =
+                new Float32Array(
+                    1 * 3 * 320 * 320
+                );
+
+            const mean =
+                [0.485, 0.456, 0.406];
+
+            const std =
+                [0.229, 0.224, 0.225];
+
+            for (let y = 0; y < 320; y++) {
+
+                for (let x = 0; x < 320; x++) {
+
+                    const pixel =
+                        (y * 320 + x) * 4;
+
+                    const index =
+                        y * 320 + x;
+
+                    input[index] =
+                        (imageData.data[pixel] / 255 - mean[0])
+                        / std[0];
+
+                    input[320 * 320 + index] =
+                        (imageData.data[pixel + 1] / 255 - mean[1])
+                        / std[1];
+
+                    input[2 * 320 * 320 + index] =
+                        (imageData.data[pixel + 2] / 255 - mean[2])
+                        / std[2];
+                }
+            }
+
+            const tensor =
+                new ort.Tensor(
+                    "float32",
+                    input,
+                    [1, 3, 320, 320]
+                );
+
+            const inputName =
+                session.inputNames[0];
+
+            const output =
+                await session.run({
+                    [inputName]: tensor
+                });
+
+            const mask =
+                output[session.outputNames[0]];
+
+            const originalCanvas =
+                document.createElement("canvas");
+
+            originalCanvas.width =
+                bitmap.width;
+
+            originalCanvas.height =
+                bitmap.height;
+
+            const originalCtx =
+                originalCanvas.getContext("2d");
+
+            originalCtx.drawImage(
+                bitmap,
+                0,
+                0
+            );
+
+            const originalImage =
+                originalCtx.getImageData(
+                    0,
+                    0,
+                    bitmap.width,
+                    bitmap.height
+                );
+
+            const maskCanvas =
+                document.createElement("canvas");
+
+            maskCanvas.width = 320;
+            maskCanvas.height = 320;
+
+            const maskCtx =
+                maskCanvas.getContext("2d");
+
+            const maskImage =
+                maskCtx.createImageData(
+                    320,
+                    320
+                );
+
+            let min = Infinity;
+            let max = -Infinity;
+
+            for (let i = 0; i < 320 * 320; i++) {
+
+                min = Math.min(min, mask.data[i]);
+                max = Math.max(max, mask.data[i]);
+
+            }
+
+            for (let i = 0; i < 320 * 320; i++) {
+
+                const value =
+                    (mask.data[i] - min)
+                    / (max - min + 1e-8);
+
+                maskImage.data[i * 4] = 255;
+                maskImage.data[i * 4 + 1] = 255;
+                maskImage.data[i * 4 + 2] = 255;
+                maskImage.data[i * 4 + 3] =
+                    Math.round(value * 255);
+            }
+
+            maskCtx.putImageData(
+                maskImage,
+                0,
+                0
+            );
+
+            const resultCanvas =
+                document.createElement("canvas");
+
+            resultCanvas.width =
+                bitmap.width;
+
+            resultCanvas.height =
+                bitmap.height;
+
+            const resultCtx =
+                resultCanvas.getContext("2d");
+
+            resultCtx.drawImage(
+                bitmap,
+                0,
+                0
+            );
+
+            resultCtx.globalCompositeOperation =
+                "destination-in";
+
+            resultCtx.drawImage(
+                maskCanvas,
+                0,
+                0,
+                bitmap.width,
+                bitmap.height
+            );
+
+            const result =
+                resultCanvas.toDataURL(
+                    "image/png"
+                );
+
+            preview.src = result;
+
+            download.href = result;
+            download.style.display =
+                "inline-block";
+
+            status.textContent =
+                "Tamamlandı!";
+
+        } catch (error) {
+
+            console.error(error);
+
+            status.textContent =
+                "İşlem sırasında hata oluştu.";
+
+        }
+
+        removeBtn.disabled = false;
+
+    });
+
+
+    loadModel();
+</script>
+
+</body>
+</html>
